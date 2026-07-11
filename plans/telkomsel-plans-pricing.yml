@@ -1,0 +1,130 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Telkomsel
+providerId: telkomsel
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Telecommunications
+- Indonesia
+- CPaaS
+- Network APIs
+- Plans
+description: >-
+  Telkomsel sells its DigiHub APIs per product with four plan types documented
+  in the consumer guide. Sandbox is a one-time free trial with a bounded quota
+  per API. Quota packages are prepaid bundles of API calls valid for the
+  running month and can be repurchased or stacked. Tier and PAYU
+  (pay-as-you-use) are enterprise-only postpaid plans billed monthly under a
+  commercial contract - Tier charges per call with rates that step down as
+  monthly volume crosses thresholds, and PAYU charges a flat fee per call.
+  Retail users can only buy Sandbox and Quota plans; enterprise Sandbox
+  requires a signed NDA and enterprise Quota, Tier, and PAYU require a signed
+  commercial contract. Payment is prepaid (quota deducted per call) or
+  postpaid (CDRs generated per call and invoiced by the carrier).
+notes: >-
+  Per-product prices (in IDR) are displayed inside the DigiHub portal after
+  login and are not published openly, so no numeric rates are recorded here.
+  Several data products additionally require a registered customer consent ID
+  before calls succeed. Verify current plan availability per product in the
+  DigiHub marketplace during reconciliation.
+sources:
+- https://digihub.telkomsel.com/documentation/consumer-guide/apis
+- https://digihub.telkomsel.com/documentation/faq/how-to-pay-for-an-api-package
+- https://digihub.telkomsel.com/api/landing
+plans:
+- id: telkomsel-digihub-sandbox
+  name: Sandbox
+  type: free
+  description: >-
+    One-time free trial per API product for testing. Cannot be repurchased
+    once the trial quota is used. Available to retail users directly;
+    enterprise users must sign an NDA first.
+  entries:
+  - label: Trial Requests
+    name: sandbox_requests
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: total
+    geo: ID
+    unit: 1
+    price: free (limited one-time trial quota, varies per API product)
+    userMultiplied: false
+  elements:
+  - name: One-Time Purchase Per API
+  - name: Trial Quota
+  - name: No Contract Required (Retail)
+- id: telkomsel-digihub-quota
+  name: Quota Package
+  type: usage
+  description: >-
+    Prepaid bundle of API calls. Can be purchased multiple times, adding to
+    the total quota for the running month; unused quota expires at the end of
+    the package validity period. Retail users cannot exceed the purchased
+    quota; enterprise users are billed for excess usage.
+  entries:
+  - label: Prepaid API Calls
+    name: quota_requests
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: ID
+    unit: 1
+    price: prepaid per package, IDR rates shown in the portal after login
+    userMultiplied: false
+  elements:
+  - name: Stackable Packages
+  - name: Monthly Validity
+  - name: Available to Retail and Enterprise
+- id: telkomsel-digihub-tier
+  name: Tier (Enterprise)
+  type: usage
+  description: >-
+    Enterprise-only postpaid plan billed monthly under a commercial contract.
+    Charged per call with tiered rates - as total monthly invocations cross a
+    tier threshold, subsequent calls are charged at the next (lower) tier
+    rate.
+  entries:
+  - label: Tiered API Calls
+    name: tier_requests
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: ID
+    unit: 1
+    price: per call, rate steps down with monthly volume; contract required
+    userMultiplied: false
+  elements:
+  - name: Volume Discounts
+  - name: Monthly Postpaid Billing
+  - name: Commercial Contract Required
+- id: telkomsel-digihub-payu
+  name: PAYU - Pay As You Used (Enterprise)
+  type: usage
+  description: >-
+    Enterprise-only postpaid plan billed monthly under a commercial contract.
+    A fee is charged each time the API is used, with no prepaid quota;
+    purchased once and billed monthly on actual usage.
+  entries:
+  - label: Per-Use API Calls
+    name: payu_requests
+    type: usage
+    metric: requests
+    limit: -1
+    timeFrame: month
+    geo: ID
+    unit: 1
+    price: per call on actual usage; contract required
+    userMultiplied: false
+  elements:
+  - name: No Prepaid Quota
+  - name: Monthly Postpaid Billing
+  - name: Commercial Contract Required
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

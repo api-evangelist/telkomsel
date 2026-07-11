@@ -1,0 +1,68 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Telkomsel
+providerId: telkomsel
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Telecommunications
+- Indonesia
+- CPaaS
+- Rate Limiting
+- Quotas
+description: >-
+  Telkomsel does not publish fixed numeric per-second or per-minute rate
+  limits for its DigiHub APIs. Consumption is governed by plan-based metering
+  instead - a one-time Sandbox trial quota per API, prepaid Quota packages
+  whose calls are deducted per request and expire with the package validity
+  period, and enterprise Tier/PAYU contracts where every call generates a CDR
+  and is billed monthly. Requests beyond a retail user's purchased quota are
+  rejected until a new package is bought; enterprise quota overruns are billed
+  as excess usage. Each request must also carry a freshly computed x-signature
+  header (SHA256 of API key + secret + epoch timestamp), which effectively
+  requires per-request signing.
+notes: >-
+  No documented 429 behavior, Retry-After headers, or numeric throughput caps
+  were found in the consumer guide or the per-endpoint OpenAPI documents as of
+  the review date. The marketplace publishes per-product average latency and
+  success-rate figures instead. Confirm any hard TPS caps per product in the
+  contract during reconciliation.
+sources:
+- https://digihub.telkomsel.com/documentation/consumer-guide/apis
+- https://digihub.telkomsel.com/documentation/faq/how-to-pay-for-an-api-package
+- https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+responseCodes:
+  throttled: not documented
+limits:
+- name: Sandbox Trial Quota
+  scope: account
+  metric: requests
+  limit: one-time trial quota per API product
+  notes: Cannot be repurchased once used; quota size varies per product.
+- name: Prepaid Quota Package
+  scope: account
+  metric: requests
+  limit: per purchased package
+  notes: Deducted per call; retail users cannot exceed the purchased quota for the running month.
+- name: Enterprise Tier / PAYU Usage
+  scope: account
+  metric: requests
+  limit: unmetered (postpaid)
+  notes: Every call generates a CDR billed monthly; excess usage over quota is charged rather than blocked.
+- name: Request Rate
+  scope: account
+  metric: requests
+  limit: not published
+  notes: No numeric TPS/QPS caps are documented publicly for any DigiHub API.
+policies:
+- name: Per-Request Signing
+  description: Every request must include an x-signature header computed as SHA256(API Key + Secret Key + current epoch timestamp), so signatures cannot be reused indefinitely.
+- name: Quota Exhaustion
+  description: Retail requests beyond the purchased quota are rejected until a new quota package is purchased; enterprise overruns are billed as excess usage.
+- name: Consent Gating
+  description: Subscriber-data products (location, scoring, identity) require a registered customer consent ID per query, independent of quota.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

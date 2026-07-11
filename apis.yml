@@ -1,0 +1,216 @@
+aid: telkomsel
+url: https://raw.githubusercontent.com/api-evangelist/telkomsel/refs/heads/main/apis.yml
+name: Telkomsel
+kind: company
+description: Telkomsel (PT Telekomunikasi Selular) is Indonesia's largest mobile
+  network operator. Through DigiHub (digihub.telkomsel.com), its API marketplace,
+  Telkomsel exposes network and subscriber APIs to developers and enterprises -
+  A2P SMS and USSD messaging, subscriber status checks, identity verification
+  (NIK/KTP matching), location verification, SIM swap detection (including a
+  CAMARA-style API), consent management, and telco-data scoring products.
+  Telkomsel is a GSMA Open Gateway participant, launching Number Verify, SIM
+  Swap, and Device Location network APIs alongside the other Indonesian
+  carriers, and partners with Vonage to distribute its network APIs globally.
+  Access requires a DigiHub account; plans range from free sandbox trials and
+  prepaid quota packages to enterprise tier and pay-as-you-use contracts.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Telecommunications
+- Indonesia
+- SMS
+- Mobile Network
+- CPaaS
+- Network APIs
+- Identity Verification
+created: '2026-07-11'
+modified: '2026-07-11'
+specificationVersion: '0.19'
+apis:
+- aid: telkomsel:telkomsel-digihub-sms-api
+  name: Telkomsel DigiHub SMS API
+  tags:
+  - SMS
+  - Messaging
+  - A2P
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/documentation/consumer-guide/sender-id-sms-template
+  baseURL: https://api.digitalcore.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/documentation/consumer-guide/sender-id-sms-template
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/71
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Application-to-person SMS to Telkomsel subscribers - send regular
+    and premium SMS with a registered (masked) Sender ID and pre-approved SMS
+    templates, and poll delivery status for submitted messages. Sender IDs and
+    templates are registered and approved through the DigiHub dashboard.
+- aid: telkomsel:telkomsel-digihub-ussd-api
+  name: Telkomsel DigiHub USSD API
+  tags:
+  - USSD
+  - Messaging
+  - Broadcast
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/api/landing
+  baseURL: https://api.digitalcore.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/documentation
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/77
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Broadcast USSD messages to Telkomsel subscribers and check the
+    delivery status of USSD sends. Uses the same DigiHub api_key plus
+    x-signature authentication as the rest of the marketplace.
+- aid: telkomsel:telkomsel-digihub-subscriber-check-api
+  name: Telkomsel DigiHub Subscriber Check API
+  tags:
+  - Subscriber Status
+  - Active Status
+  - Roaming
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/api/product/138
+  baseURL: https://api.digitalcore.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/api/product/138
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/137
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Query the state of a Telkomsel MSISDN - active status (ACTIVE,
+    GRACE, EXPIRED, or CHURN, sold as the Active Status v3 product), subscriber
+    type, roaming status, call-forwarding status, and whether a number has been
+    recycled and reassigned to a new owner (Recycle v2). Used by banks and
+    digital services to keep customer contact data safe and current.
+- aid: telkomsel:telkomsel-digihub-identity-verification-api
+  name: Telkomsel DigiHub Identity Verification API
+  tags:
+  - Identity
+  - KYC
+  - NIK Matching
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/api/product/128
+  baseURL: https://api.digitalcore.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/api/product/128
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/142
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Verify a customer's identity against Telkomsel SIM-registration
+    data - check whether a NIK (Indonesian national identity number) and MSISDN
+    are paired (NIK Matching v4), match KTP identity-card fields, and run
+    general ID verification. An IoT KYC product covers know-your-customer
+    checks for IoT SIMs. Aimed at government and regulated enterprises such as
+    banks and fintechs.
+- aid: telkomsel:telkomsel-digihub-location-api
+  name: Telkomsel DigiHub Location API
+  tags:
+  - Location
+  - Verification
+  - Network APIs
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/api/product/131
+  baseURL: https://api.digitalcore.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/api/product/131
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/145
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Verify a subscriber's home or work location against Telkomsel
+    network data (Location Verification v3) - submit a longitude/latitude,
+    address, or zip code with the customer's consent ID and receive a match
+    score - or retrieve a subscriber's last known location. Telkomsel also
+    launched a Device Location network API with the other Indonesian carriers
+    under the GSMA Open Gateway initiative.
+- aid: telkomsel:telkomsel-digihub-sim-swap-api
+  name: Telkomsel DigiHub SIM Swap API
+  tags:
+  - SIM Swap
+  - Fraud Prevention
+  - CAMARA
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/api/product/142
+  baseURL: https://digihub.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/api/product/142
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/189
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Detect whether a Telkomsel number's SIM card was recently swapped,
+    to defend SMS one-time-password flows against account-takeover fraud. Two
+    surfaces exist - the marketplace SIM Swap v2 product with DigiHub key-based
+    auth, and a CAMARA-style /sim-swap/v0/check endpoint that follows the GSMA
+    Open Gateway definition and authenticates with OIDC CIBA (/bc-authorize
+    plus /token) bearer tokens.
+- aid: telkomsel:telkomsel-digihub-consent-management-api
+  name: Telkomsel DigiHub Consent Management API
+  tags:
+  - Consent
+  - Privacy
+  - Compliance
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/documentation
+  baseURL: https://api.digitalcore.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/documentation
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/138
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Register and manage customer consent before querying
+    subscriber-data APIs - online consent registration plus an offline variant
+    for consent collected out-of-band. Consent IDs issued here are required
+    parameters on data products such as Location Verification and the scoring
+    APIs.
+- aid: telkomsel:telkomsel-digihub-scoring-insights-api
+  name: Telkomsel DigiHub Scoring and Insights API
+  tags:
+  - Credit Scoring
+  - Telco Data
+  - Insights
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://digihub.telkomsel.com/api/product/108
+  baseURL: https://api.digitalcore.telkomsel.com
+  properties:
+  - url: https://digihub.telkomsel.com/api/product/108
+    type: Documentation
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/129
+    type: APIReference
+  - url: openapi/telkomsel-openapi.yml
+    type: OpenAPI
+  description: Telco-data scoring and enrichment products for lenders,
+    fintechs, and e-commerce - tScore telco credit scores, Income Score, Social
+    Economy Status (SES), Interest v2 segments, Lifestyle Score, Loyalist, and
+    TDI Tenure Score Category. Each returns a score or category for an MSISDN
+    supplied with the customer's consent ID.
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/telkomsel
+- type: Website
+  url: https://www.telkomsel.com/en
+- type: Portal
+  url: https://digihub.telkomsel.com
+- type: Documentation
+  url: https://digihub.telkomsel.com/documentation
+- type: Authentication
+  url: https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+- type: Plans
+  url: plans/telkomsel-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/telkomsel-rate-limits.yml
+- type: FinOps
+  url: finops/telkomsel-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

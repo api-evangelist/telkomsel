@@ -1,0 +1,140 @@
+aid: telkomsel
+name: Telkomsel
+review:
+  question: Does Telkomsel expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-11'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Every API Telkomsel publishes through
+    the DigiHub marketplace is request/response REST over HTTPS - SMS and
+    USSD sends, subscriber checks, identity verification, location
+    verification, SIM swap checks, consent management, and scoring products
+    all use synchronous POST/GET calls. The only asynchronous surface is an
+    HTTP webhook - the SMS and USSD send endpoints define an OpenAPI
+    callback that POSTs delivery reports to a client-supplied
+    callback_domain - alongside client-initiated GET delivery-status polls.
+    That callback is already modeled in the OpenAPI document (as OpenAPI
+    callbacks), and no WebSocket (ws:// or wss://) or SSE transport is
+    documented anywhere in DigiHub's per-endpoint OpenAPI registry, so
+    there is no WebSocket surface to model in AsyncAPI.
+findings:
+  summary: |
+    Telkomsel does not publish a documented public WebSocket API. Telkomsel
+    is Indonesia's largest mobile network operator, and its developer surface
+    is DigiHub (digihub.telkomsel.com), an API marketplace with 13 published
+    API products as of the review date - Active Status v3, API Income Score,
+    API Interest v2, API IoT KYC, API Location Verification v3, API NIK
+    Matching v4, API Recycle v2, API Telco SES, API tScore, IoT Signal
+    Strength API, nGage Video, SIM Swap v2, and TDI Tenure Score Category -
+    plus SMS, USSD, consent-management, and CIAM/OTP endpoints in its
+    per-endpoint OpenAPI registry. All are synchronous HTTPS REST. Most
+    authenticate with an api_key header plus an x-signature header computed
+    as SHA256(API Key + Secret Key + epoch timestamp); a CAMARA-style SIM
+    Swap API (/sim-swap/v0/check) authenticates with OIDC CIBA
+    (/bc-authorize + /token) bearer tokens. Telkomsel is a GSMA Open Gateway
+    participant (Number Verify, SIM Swap, Device Location launched jointly
+    with Indosat Ooredoo Hutchison, XL Axiata, and Smartfren) and partners
+    with Vonage to distribute its network APIs. Trying any endpoint requires
+    a DigiHub account and a subscribed plan; the DigiHub SPA's content API
+    serves the product catalog, consumer-guide documentation, and
+    per-endpoint OpenAPI documents publicly without authentication.
+  accessModel: |
+    Documentation and per-endpoint OpenAPI documents are public (served by
+    the DigiHub content API without login), but invocation is gated. Retail
+    users can buy a one-time free Sandbox plan and prepaid Quota packages;
+    Tier and PAYU (pay-as-you-use) plans are enterprise-only and require a
+    signed NDA or commercial contract. Several data products (scoring,
+    location, identity) also require a customer consent ID obtained through
+    the Consent Management API before a query is allowed. Per-product prices
+    are shown in the portal after login and are not published openly.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.digitalcore.telkomsel.com
+      documented: true
+      note: Primary DigiHub production gateway for SMS, USSD, subscriber check, identity, location, consent, and scoring endpoints.
+    - protocol: REST
+      scheme: https
+      baseURL: https://digihub.telkomsel.com
+      documented: true
+      note: Secondary host serving some subscriber-check and tScore endpoints, the CIAM/OTP endpoints, and the CAMARA-style /sim-swap/v0 API with /bc-authorize and /token.
+    - protocol: HTTP Poll
+      scheme: https
+      documented: true
+      note: SMS delivery status (GET /v1/delivery) and USSD delivery status (GET /digihub/ussd/deliverystatus) are client-initiated polls, not server push.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: SMS and USSD send endpoints define an OpenAPI callback POSTing delivery reports to a client-supplied callback_domain. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint appears anywhere in DigiHub's endpoint registry or consumer guide as of the review date.
+  endpointsConfirmedRest:
+    - POST https://api.digitalcore.telkomsel.com/digihub/v1/reguler/sendsms
+    - POST https://api.digitalcore.telkomsel.com/digihub/sms/premium
+    - GET  https://api.digitalcore.telkomsel.com/v1/delivery
+    - POST https://api.digitalcore.telkomsel.com/digihub/ussd/broadcast
+    - GET  https://api.digitalcore.telkomsel.com/digihub/ussd/deliverystatus
+    - POST https://api.digitalcore.telkomsel.com/digihub/subscheck/activestatus
+    - POST https://api.digitalcore.telkomsel.com/digihub/subscheck/v2/activestatus
+    - POST https://digihub.telkomsel.com/digihub/subscheck/subscribertype
+    - POST https://digihub.telkomsel.com/digihub/subscheck/roamingstatus
+    - POST https://digihub.telkomsel.com/digihub/subscheck/callforward
+    - POST https://api.digitalcore.telkomsel.com/digihub/subscheck/recyclev2
+    - POST https://api.digitalcore.telkomsel.com/digihub/subscheck/nikmatchingv4
+    - POST https://api.digitalcore.telkomsel.com/digihub/ktp/match/v2
+    - POST https://api.digitalcore.telkomsel.com/digihub/v2/idverification
+    - POST https://api.digitalcore.telkomsel.com/digihub/subscheck/locationverificationv3
+    - POST https://digihub.telkomsel.com/digihub/subscheck/lastlocation
+    - POST https://digihub.telkomsel.com/digihub/subscheck/simswapv2
+    - POST https://digihub.telkomsel.com/sim-swap/v0/check
+    - POST https://digihub.telkomsel.com/bc-authorize
+    - POST https://digihub.telkomsel.com/token
+    - POST https://api.digitalcore.telkomsel.com/digihub/v2/consentmgmt
+    - POST https://api.digitalcore.telkomsel.com/digihub/consent-management/v2/offline
+    - POST https://digihub.telkomsel.com/digihub/v1/tscore/premium
+    - POST https://api.digitalcore.telkomsel.com/digihub/v1/generic/telco/score
+    - POST https://api.digitalcore.telkomsel.com/digihub/subscheck/sesv2
+    - POST https://api.digitalcore.telkomsel.com/digihub/subscheck/interestv2
+    - POST https://api.digitalcore.telkomsel.com/digihub/lifestyle-score
+    - POST https://api.digitalcore.telkomsel.com/digihub/loyalist
+    - POST https://digihub.telkomsel.com/ciam/v1/otp/login
+    - POST https://digihub.telkomsel.com/ciam/v1/otp/submit
+    - POST https://digihub.telkomsel.com/ciam/v1/token
+sources:
+  - url: https://digihub.telkomsel.com/
+    type: Portal
+    note: DigiHub API marketplace - Angular SPA; content is served by a public backend API under /apis/.
+  - url: https://digihub.telkomsel.com/apis/V2/product
+    type: APIReference
+    note: Public product-catalog API listing the 13 published API products with descriptions, categories, latency, and subscriber counts.
+  - url: https://digihub.telkomsel.com/apis/V2/endpoint/71
+    type: OpenAPI
+    note: Example of the public per-endpoint OpenAPI registry (Send SMS); IDs 60-200 cover SMS, USSD, subscheck, identity, location, SIM swap, consent, scoring, and CIAM endpoints.
+  - url: https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    type: Documentation
+    note: App key-based authentication - api_key header plus x-signature SHA256(Key + Secret + epoch timestamp).
+  - url: https://digihub.telkomsel.com/documentation/consumer-guide/apis
+    type: Documentation
+    note: Consumer guide covering browsing, endpoints, pricing plans (Sandbox/Quota/Tier/PAYU), retail vs enterprise rules, and NDA/contract requirements.
+  - url: https://digihub.telkomsel.com/documentation/consumer-guide/sender-id-sms-template
+    type: Documentation
+    note: Sender ID registration and SMS template approval workflow for the SMS API.
+  - url: https://www.gsma.com/newsroom/press-release/enhancing-security-and-customer-experience-indonesian-telecom-operators-to-launch-three-service-apis-through-the-gsma-open-gateway-initiative/
+    type: PressRelease
+    note: Telkomsel and the other Indonesian operators launching Number Verify, SIM Swap, and Device Location under GSMA Open Gateway.
+  - url: https://www.telkomsel.com/en/about-us/news/vonage-and-telkomsel-collaborate-drive-ecosystem-digital-innovation-making-network
+    type: PressRelease
+    note: Vonage partnership distributing Telkomsel network APIs; Telkomsel described as a leading CAMARA API implementer, with DigiHub as the access platform.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket or other server-push transport exists on Telkomsel's public
+    API surface - everything DigiHub publishes is synchronous HTTPS REST,
+    with delivery status obtained by polling - so no AsyncAPI document was
+    created. An OpenAPI document was assembled instead, merged verbatim from
+    DigiHub's own public per-endpoint OpenAPI registry.

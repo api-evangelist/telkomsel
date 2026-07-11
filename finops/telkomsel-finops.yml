@@ -1,0 +1,101 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Telkomsel
+providerId: telkomsel
+created: '2026-07-11'
+modified: '2026-07-11'
+reconciled: false
+tags:
+- Telecommunications
+- Indonesia
+- CPaaS
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Telkomsel DigiHub API spend. Every DigiHub API product is
+  metered per call. Prepaid spend is quota packages - calls are deducted from
+  the purchased quota, packages can be stacked within the running month, and
+  unused quota expires with the package validity period. Postpaid spend is
+  enterprise Tier and PAYU contracts - each call generates a CDR (call detail
+  record) that the carrier invoices monthly, with Tier rates stepping down as
+  monthly volume crosses thresholds and PAYU charging a flat per-call fee.
+  Sandbox trials are free one-time quotas per product. Pricing is per product
+  and displayed in IDR inside the portal after login.
+notes: >-
+  Per-unit IDR rates are not published openly and are not reconciled here.
+  Enterprise plans require signed NDA or commercial contract, so negotiated
+  rates may differ from portal list prices. Watch expiring prepaid quota -
+  unused calls are forfeited at the end of the package validity period.
+sources:
+- https://digihub.telkomsel.com/documentation/faq/how-to-pay-for-an-api-package
+- https://digihub.telkomsel.com/documentation/consumer-guide/apis
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Telkomsel
+serviceCategory: Integration and Communication
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: IDR
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Telkomsel DigiHub
+  ServiceCategory: Integration and Communication
+  ProviderName: Telkomsel
+  PublisherName: Telkomsel
+  InvoiceIssuerName: PT Telekomunikasi Selular
+  BillingCurrency: IDR
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: api_calls
+  description: API invocations per DigiHub product; deducted from prepaid quota or billed postpaid via CDRs.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - account
+  - product
+  - plan
+- name: quota_purchases
+  description: Prepaid quota packages purchased per product; stackable within the running month, unused calls expire.
+  unit: packages
+  aggregation: sum
+  dimensions:
+  - account
+  - product
+- name: excess_usage
+  description: Enterprise calls beyond the purchased quota for the running month, billed as overage.
+  unit: requests
+  aggregation: sum
+  dimensions:
+  - account
+  - product
+- name: sms_messages
+  description: A2P SMS submissions (regular and premium) to Telkomsel MSISDNs via the SMS API.
+  unit: messages
+  aggregation: sum
+  dimensions:
+  - account
+  - sender_id
+principles:
+- name: Visibility
+  description: Track per-product call volume against prepaid quota balances and monthly CDR-billed usage; the portal dashboard reports usage and recent orders per application.
+- name: Allocation
+  description: Register separate DigiHub applications and API keys per team or workload so per-call charges map to internal cost centers.
+- name: Optimization
+  description: Match plan type to volume - quota packages for predictable retail volume, Tier for high enterprise volume to benefit from step-down rates, PAYU for spiky usage; size quota purchases to the month to avoid forfeiting expired calls.
+- name: Accountability
+  description: Assign an owner per subscribed product; review monthly invoices and excess-usage charges against contracted rates.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
