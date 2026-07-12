@@ -1,0 +1,32 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/telkomsel-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: api_key
+  description: API Key / Package Key issued per subscribed DigiHub application.
+  sources:
+  - openapi/telkomsel-openapi.yml
+- name: SignatureAuth
+  type: apiKey
+  in: header
+  parameter: x-signature
+  description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required
+    alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+  sources:
+  - openapi/telkomsel-openapi.yml
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then
+    POST /token). Used by the CAMARA-style SIM Swap API.
+  sources:
+  - openapi/telkomsel-openapi.yml

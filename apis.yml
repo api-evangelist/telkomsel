@@ -195,6 +195,10 @@ apis:
     TDI Tenure Score Category. Each returns a score or category for an MSISDN
     supplied with the customer's consent ID.
 common:
+- type: DomainSecurity
+  url: security/telkomsel-domain-security.yml
+- type: Authentication
+  url: authentication/telkomsel-authentication.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/telkomsel
 - type: Website
