@@ -1,0 +1,206 @@
+openapi: 3.0.3
+info:
+  title: Telkomsel DigiHub APIs Consent Management API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  version: '2026-07-11'
+  contact:
+    url: https://digihub.telkomsel.com/showcase/contactus
+servers:
+- url: https://api.digitalcore.telkomsel.com
+  description: Telkomsel Digital Core API gateway (primary DigiHub production host; some APIs are served from https://digihub.telkomsel.com instead - see path-level servers)
+security:
+- ApiKeyAuth: []
+  SignatureAuth: []
+tags:
+- name: Consent Management
+  description: Register customer consent required by subscriber-data products.
+paths:
+  /digihub/v2/consentmgmt:
+    post:
+      summary: Consent Management
+      operationId: consentManagement
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - transaction_id
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: transaction_id
+                consent:
+                  type: object
+                  required:
+                  - partner_id
+                  - product_id
+                  - msisdn
+                  - customer_name
+                  properties:
+                    partner_id:
+                      description: partner_id
+                      type: string
+                      example: TfbQQR5oaTqWb0dp5qdr48BnHksBwSmqkI2BVC17ghPRtHbJSJSJSKR/nIw+EPblJPHd/iNsUC9Nwmfis=
+                    product_id:
+                      description: product_id
+                      type: string
+                      example: TerGQR4897hJDkBvvcgUK/cYUV7rhKil87rBi7zYvtcZgDCejRhdskksksUnOEXPklNGcrhaMEFuIhwLnmCMI7PvK54YjrQ3OHv
+                    msisdn:
+                      description: msisdn
+                      type: string
+                      example: 08148xxxx
+                    customer_name:
+                      description: customer_name
+                      type: string
+                      example: Ferguso
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - consent
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C0022112012345642699000000-TID-168794623
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  consent:
+                    type: object
+                    required:
+                    - consent_id
+                    - expired_date
+                    properties:
+                      consent_id:
+                        description: Consent id
+                        type: string
+                        example: XvbWQR5oaTqWb0dp5qdrINbcsja/tJi+D8+o95gdzWeN8liKI3FqYx7XCosC7HnLMZTrdskKsjfskfnsyec7up/Z2mK2e+5mhd/VcY984jP8f7ysRBy7XRFT+ueou4UZjg3E3Q=
+                      expired_date:
+                        description: Expire of consent
+                        type: string
+                        example: '2022-02-12T16:05:35.258489+07:00'
+        '400':
+          description: Consent still active / invalid MSISDN / invalid Product ID / invalid Partner ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C0022112012345642699000000-TID-168794623
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Consent still active:
+                  value:
+                    transaction:
+                      transaction_id: C002211201144342699000000-TID-1638344623
+                      status_code: '20015'
+                      status_desc: Consent Still Active
+                invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002211201145504141000000746-TID-1638345304
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                invalid Product ID:
+                  value:
+                    transaction:
+                      transaction_id: C002211201145646002000000666-TID-1638345406
+                      status_code: '20021'
+                      status_desc: Product Not Found
+                invalid Partner ID:
+                  value:
+                    transaction:
+                      transaction_id: C002211201145731670000000911-TID-1638345452
+                      status_code: '20031'
+                      status_desc: Partner Not Found
+      tags:
+      - Consent Management
+      externalDocs:
+        description: 'DigiHub endpoint reference: Consent Management'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/138
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+      description: API Key / Package Key issued per subscribed DigiHub application.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then POST /token). Used by the CAMARA-style SIM Swap API.
+externalDocs:
+  description: DigiHub Consumer Guide
+  url: https://digihub.telkomsel.com/documentation

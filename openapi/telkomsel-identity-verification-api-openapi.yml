@@ -1,0 +1,973 @@
+openapi: 3.0.3
+info:
+  title: Telkomsel DigiHub APIs Consent Management Identity Verification API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  version: '2026-07-11'
+  contact:
+    url: https://digihub.telkomsel.com/showcase/contactus
+servers:
+- url: https://api.digitalcore.telkomsel.com
+  description: Telkomsel Digital Core API gateway (primary DigiHub production host; some APIs are served from https://digihub.telkomsel.com instead - see path-level servers)
+security:
+- ApiKeyAuth: []
+  SignatureAuth: []
+tags:
+- name: Identity Verification
+  description: NIK/MSISDN pairing, KTP matching, and general ID verification against SIM-registration data.
+paths:
+  /digihub/subscheck/nikmatchingv4:
+    post:
+      summary: NIK Matching v4
+      operationId: NIK-Matching-v4
+      description: This service is use to check pair of KTP with msisdn. This API will enable Government or Enterprise to know if NIK and MSISDN are paired according to Telkomsel Registration Process. Telkomsel will just respond with Score.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - parameter
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - transaction_id
+                  - consent_id
+                  - msisdn
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: '1643624695_00000187'
+                    consent_id:
+                      description: Customer consent id
+                      type: string
+                      example: consent_01
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code.
+                      type: string
+                      example: '628111334831'
+                parameter:
+                  type: object
+                  required:
+                  - nik
+                  - channel
+                  properties:
+                    nik:
+                      description: Personal Identity Number
+                      type: string
+                      example: 3275084501940012
+                    channel:
+                      description: Channel name, for external TSEL please use “of” as the value
+                      type: string
+                      example: of
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - ktpmatch_information
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status description
+                        type: string
+                        example: Success
+                      score:
+                        description: Score of KTP Match returned based on score mapping Scoring Rules.
+                        type: string
+                        example: '2'
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status description
+                        type: string
+                        example: Success
+                      score:
+                        description: Score of KTP Match returned based on score mapping Scoring Rules.
+                        type: string
+                        example: '2'
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Subscriber MSISDN Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: Subscriber MSISDN Not Found
+                Error msisdn is postpaid:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20004'
+                      status_desc: Error msisdn is postpaid
+                Msisdn is Not Active:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20005'
+                      status_desc: Error msisdn is postpaid
+                Code Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20009'
+                      status_desc: Code Not Found
+                Partner Not Allow:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20013'
+                      status_desc: Partner Not Allow
+                Customer Not Consent:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20014'
+                      status_desc: Customer Not Consent
+                Consent expired:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20015'
+                      status_desc: Consent expired
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status description
+                        type: string
+                        example: Success
+                      score:
+                        description: Score of KTP Match returned based on score mapping Scoring Rules.
+                        type: string
+                        example: '2'
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status description
+                        type: string
+                        example: Success
+                      score:
+                        description: Score of KTP Match returned based on score mapping Scoring Rules.
+                        type: string
+                        example: '2'
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status description
+                        type: string
+                        example: Success
+                      score:
+                        description: Score of KTP Match returned based on score mapping Scoring Rules.
+                        type: string
+                        example: '2'
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Service provider response timeout
+      tags:
+      - Identity Verification
+      externalDocs:
+        description: 'DigiHub endpoint reference: NIK Matching v4'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/142
+  /digihub/ktp/match/v2:
+    post:
+      summary: KTP Match
+      operationId: ktpMatch
+      description: This service is use to check pair of KTP with msisdn. This API will enable Government or Enterprise to know if NIK and MSISDN are paired according to Telkomsel Registration Process. Telkomsel will just respond with Score.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - transaction_id
+                  - nik
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: C002190726165745657448250
+                    nik:
+                      description: Single identity number
+                      type: string
+                      example: 331218050xxxxx
+                consent:
+                  type: object
+                  required:
+                  - msisdn
+                  - consent_id
+                  - code
+                  properties:
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code.
+                      type: string
+                      example: 62811xxx
+                    consent_id:
+                      description: Consent id which is registered
+                      type: string
+                      example: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code:
+                      description: Code api identification given by Telkomsel.
+                      type: string
+                      example: n453ajpqnv5tyrb85eyg22x7
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - ktpmatch_information
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  sms_information:
+                    type: object
+                    required:
+                    - score
+                    properties:
+                      score:
+                        description: Score of KTP Match
+                        type: string
+                        example: '1'
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Subscriber MSISDN Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: Subscriber MSISDN Not Found
+                Error msisdn is postpaid:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20004'
+                      status_desc: Error msisdn is postpaid
+                Msisdn is Not Active:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20005'
+                      status_desc: Error msisdn is postpaid
+                Code Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20009'
+                      status_desc: Code Not Found
+                Partner Not Allow:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20013'
+                      status_desc: Partner Not Allow
+                Customer Not Consent:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20014'
+                      status_desc: Customer Not Consent
+                Consent expired:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20015'
+                      status_desc: Consent expired
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Service provider response timeout
+      tags:
+      - Identity Verification
+      externalDocs:
+        description: 'DigiHub endpoint reference: KTP Match'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/114
+  /digihub/v2/idverification:
+    post:
+      summary: ID Verification V2
+      operationId: idVerV2
+      description: API to GET score location customer.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - home_work
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: 040520181127010000
+                    home_work:
+                      description: Home = 1, Work= 0
+                      type: string
+                      example: '1'
+                      enum:
+                      - '0'
+                      - '1'
+                    long:
+                      description: Longitude
+                      type: string
+                      example: '-6.247895'
+                    lat:
+                      description: Latitude
+                      type: string
+                      example: '106.821312'
+                    address:
+                      description: 'Format address : Street, Village/Urban Commune, District , City/Regency, Province'
+                      type: string
+                      example: Jl. Kemang Selatan No.30 RT9 RW1, Bangka, Mampang Prapatan,   Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta
+                    zip_code:
+                      description: Postal code
+                      type: string
+                      example: '12790'
+                sms:
+                  type: object
+                  required:
+                  - msisdn
+                  - consent_id
+                  - code
+                  properties:
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code.
+                      type: string
+                      example: 62811xx
+                    consent_id:
+                      description: Consent id which is registered.
+                      type: string
+                      example: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code:
+                      description: Code api identification v2 given by Telkomsel.
+                      type: string
+                      example: y473hkpghfmju7zxmtdjgfkr
+            examples:
+              By longitude and latitude:
+                value:
+                  transaction:
+                    transaction_id: 040520181127010000
+                    home_work: '1'
+                    long: -6.247895
+                    lat: 106.821312
+                    address: null
+                    zip_code: null
+                  consent:
+                    msisdn: 62811xx
+                    consent_id: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code: y473hkpghfmju7zxmtdjgfkr
+              By address:
+                value:
+                  transaction:
+                    transaction_id: 040520181127010000
+                    home_work: '1'
+                    long: null
+                    lat: null
+                    address: Jl. Kemang Selatan No.30 RT9 RW1, Bangka, Mampang Prapatan,Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta
+                    zip_code: null
+                  consent:
+                    msisdn: 62811xx
+                    consent_id: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code: y473hkpghfmju7zxmtdjgfkr
+              By zipcode:
+                value:
+                  transaction:
+                    transaction_id: 040520181127010000
+                    home_work: '1'
+                    long: null
+                    lat: null
+                    address: null
+                    zip_code: '12790'
+                  consent:
+                    msisdn: 62811xx
+                    consent_id: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code: y473hkpghfmju7zxmtdjgfkr
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - response
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: 040520181127010000
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  sms_information:
+                    type: object
+                    required:
+                    - msisdn
+                    - score
+                    properties:
+                      msisdn:
+                        description: MSISDN
+                        type: string
+                        example: 62811xx
+                      score:
+                        description: Score from 1-7
+                        type: string
+                        example: 2
+        '400':
+          description: Empty mandatory parameter / Invalid MSISDN / Invalid Format Request / Data Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: 040520181127010000
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Empty mandatory parameter:
+                  value:
+                    transaction:
+                      transaction_id: 040520181127010000
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: 040520181127010000
+                      status_code: '20002'
+                      status_desc: Invalid MSISDN
+                Invalid Format Request:
+                  value:
+                    transaction:
+                      transaction_id: 040520181127010000
+                      status_code: IDVER-001
+                      status_desc: Invalid Format Request
+                Data Not Found:
+                  value:
+                    transaction:
+                      transaction_id: 040520181127010000
+                      status_code: IDVER-002
+                      status_desc: Data Not Found
+        '500':
+          description: ESB internal error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: 040520181127010000
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: 040520181127010000
+                  status_code: '40000'
+                  status_desc: ESB internal error
+        '502':
+          description: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: 040520181127010000
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: 040520181127010000
+                  status_code: 30xxx
+                  status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: 040520181127010000
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: 040520181127010000
+                  status_code: '10001'
+                  status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: 040520181127010000
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: 040520181127010000
+                  status_code: '10004'
+                  status_desc: Service provider response timeout
+      tags:
+      - Identity Verification
+      externalDocs:
+        description: 'DigiHub endpoint reference: ID Verification'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/87
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+      description: API Key / Package Key issued per subscribed DigiHub application.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then POST /token). Used by the CAMARA-style SIM Swap API.
+externalDocs:
+  description: DigiHub Consumer Guide
+  url: https://digihub.telkomsel.com/documentation

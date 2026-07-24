@@ -1,0 +1,365 @@
+openapi: 3.0.3
+info:
+  title: Telkomsel DigiHub APIs Consent Management Location API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  version: '2026-07-11'
+  contact:
+    url: https://digihub.telkomsel.com/showcase/contactus
+servers:
+- url: https://api.digitalcore.telkomsel.com
+  description: Telkomsel Digital Core API gateway (primary DigiHub production host; some APIs are served from https://digihub.telkomsel.com instead - see path-level servers)
+security:
+- ApiKeyAuth: []
+  SignatureAuth: []
+tags:
+- name: Location
+  description: Location verification scoring and last known location.
+paths:
+  /digihub/subscheck/locationverificationv3:
+    post:
+      summary: Location Verification v3
+      operationId: Location-Verification-v3
+      description: API to GET score location customer.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - parameter
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - msisdn
+                  - consent_id
+                  - code
+                  properties:
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code.
+                      type: string
+                      example: 62811xx
+                    consent_id:
+                      description: Consent id which is registered.
+                      type: string
+                      example: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code:
+                      description: Code api identification v2 given by Telkomsel.
+                      type: string
+                      example: y473hkpghfmju7zxmtdjgfkr
+                parameter:
+                  type: object
+                  required:
+                  - home_work
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: 040520181127010000
+                    home_work:
+                      description: Home = 1, Work= 0
+                      type: string
+                      example: '1'
+                      enum:
+                      - '0'
+                      - '1'
+                    long:
+                      description: Longitude
+                      type: string
+                      example: '-6.247895'
+                    lat:
+                      description: Latitude
+                      type: string
+                      example: '106.821312'
+                    address:
+                      description: 'Format address : Street, Village/Urban Commune, District , City/Regency, Province'
+                      type: string
+                      example: Jl. Kemang Selatan No.30 RT9 RW1, Bangka, Mampang Prapatan,   Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta
+                    zip_code:
+                      description: Postal code
+                      type: string
+                      example: '12790'
+            examples:
+              By long and lat:
+                value:
+                  transaction:
+                    transaction_id: '1643624695_00000001'
+                    consent_id: consent_01
+                    msisdn: 6281110xxxx
+                  parameter:
+                    location_type: home
+                    long: 106.xx
+                    lat: -6.xxx
+              By address:
+                value:
+                  transaction:
+                    transaction_id: '1643624695_00000001'
+                    consent_id: consent_01
+                    msisdn: 6281110xxxx
+                  parameter:
+                    location_type: home
+                    address: Jl. Mahoni xxxx
+              By zipcode:
+                value:
+                  transaction:
+                    transaction_id: '1643624695_00000001'
+                    consent_id: consent_01
+                    msisdn: 6281110xxxx
+                  parameter:
+                    location_type: home
+                    zip_code: 17xxx
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: '1643624695_00000187'
+                  status_code:
+                    description: Status code
+                    type: string
+                    example: '00000'
+                  status_desc:
+                    description: Status descriptiona
+                    type: string
+                    example: success
+                  score:
+                    description: Status descriptiona
+                    type: string
+                    example: '2'
+        '400':
+          description: Invalid MSISDN
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: 040520181127010000
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: '1643624695_00000187'
+                      status_code: '20002'
+                      status_desc: Invalid MSISDN
+      tags:
+      - Location
+      externalDocs:
+        description: 'DigiHub endpoint reference: Location Verification v3'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/145
+  /digihub/subscheck/lastlocation:
+    servers:
+    - url: https://digihub.telkomsel.com
+    post:
+      summary: This API will provide insight regarding location (city level) of targeted customer
+      operationId: lastLocation
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - trx_id
+                  - command
+                  - param
+                  properties:
+                    trx_id:
+                      type: string
+                      example: 040520181127010000
+                    command:
+                      type: string
+                      example: isLocation
+                    param:
+                      type: string
+                      example: Jakarta Selatan
+                consent:
+                  type: object
+                  required:
+                  - msisdn
+                  - consent_id;
+                  - code
+                  properties:
+                    msisdn:
+                      type: string
+                      example: '62811917671'
+                    consent_id:
+                      type: string
+                      example: O3K6lE674dF4sVE/SqcYS1zT2ENoDxU/VB6bNWPmpGbLgjqkgIdJkNg=
+                    code:
+                      type: string
+                      example: 3erthdxb299n4dg2ue74xv4s
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - message
+                - trx_id
+                - result
+                properties:
+                  status:
+                    description: status
+                    type: string
+                    example: '00'
+                  message:
+                    description: message
+                    type: string
+                    example: Success
+                  trx_id:
+                    description: trx_id
+                    type: string
+                    example: 040520181127010000
+                  result:
+                    description: result
+                    type: string
+                    example: 'YES'
+        '400':
+          description: Invalid MSISDN / Customer not active / Parameter Param is invalid format
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - message
+                - trx_id
+                - result
+                properties:
+                  status:
+                    description: status
+                    type: string
+                    example: '20'
+                  message:
+                    description: message
+                    type: string
+                    example: Invalid MSISDN
+                  trx_id:
+                    description: trx_id
+                    type: string
+                    example: 040520181127010000
+                  result:
+                    description: result
+                    type: string
+                    example: ''
+              examples:
+                Invalid MSISDN:
+                  value:
+                    status: '20'
+                    message: Invalid MSISDN
+                    trx_id: 040520181127010000
+                    result: ''
+                Customer not active:
+                  value:
+                    status: '17'
+                    message: Customer not active
+                    trx_id: 040520181127010000
+                    result: ''
+                Parameter Param is invalid format:
+                  value:
+                    status: '21'
+                    message: Parameter Param is invalid format
+                    trx_id: 040520181127010000
+                    result: ''
+      tags:
+      - Location
+      externalDocs:
+        description: 'DigiHub endpoint reference: API Last Location'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/131
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+      description: API Key / Package Key issued per subscribed DigiHub application.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then POST /token). Used by the CAMARA-style SIM Swap API.
+externalDocs:
+  description: DigiHub Consumer Guide
+  url: https://digihub.telkomsel.com/documentation

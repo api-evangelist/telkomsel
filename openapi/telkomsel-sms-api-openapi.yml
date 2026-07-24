@@ -1,0 +1,958 @@
+openapi: 3.0.3
+info:
+  title: Telkomsel DigiHub APIs Consent Management SMS API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  version: '2026-07-11'
+  contact:
+    url: https://digihub.telkomsel.com/showcase/contactus
+servers:
+- url: https://api.digitalcore.telkomsel.com
+  description: Telkomsel Digital Core API gateway (primary DigiHub production host; some APIs are served from https://digihub.telkomsel.com instead - see path-level servers)
+security:
+- ApiKeyAuth: []
+  SignatureAuth: []
+tags:
+- name: SMS
+  description: Application-to-person SMS - regular and premium sends plus delivery-status polling.
+paths:
+  /digihub/v1/reguler/sendsms:
+    post:
+      summary: Send SMS
+      operationId: sendSMS
+      description: This service will send SMS to Telkomsel MSISDN.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - sms
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: C002190726165745657448250
+                    callback_domain:
+                      description: Partner's callback domain
+                      type: string
+                      example: yourcompanydomain.com
+                sms:
+                  type: object
+                  required:
+                  - recipient
+                  - sms_text
+                  properties:
+                    sender_id:
+                      description: ADN/SMS From
+                      type: string
+                      maxLength: 11
+                      example: YOURCOMPANY
+                    recipient:
+                      description: MSISDN starts with "62" for Indonesia calling code
+                      type: string
+                      example: 62811xxx
+                    sms_text:
+                      description: Sms text is mandatory if template is not exist.
+                      type: string
+                      example: Hello World!
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - sms_information
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  sms_information:
+                    type: object
+                    required:
+                    - message_id
+                    properties:
+                      message_id:
+                        description: SMS Message ID
+                        type: string
+                        example: 18D10100
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Invalid Sender ID:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: INVALID SENDER ID
+        '500':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '40000'
+                  status_desc: Backend Internal Error
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Backend error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Backend unreachable
+        '504':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Backend response timeout
+      callbacks:
+        deliveryReport:
+          https://{$request.body#/transaction/callback_domain}/callback/digihub/smsapi:
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      required:
+                      - transaction_id
+                      - message_id
+                      - status
+                      properties:
+                        transaction_id:
+                          description: Transaction ID
+                          type: string
+                          example: C002190726165745657448250
+                        message_id:
+                          description: SMS Message ID
+                          type: string
+                          example: 18D10100
+                        status:
+                          description: SMS Delivery Status
+                          type: string
+                          example: DELIVRD
+              responses:
+                2XX:
+                  description: Your server implementation should return this HTTP status code if the data was received successfully
+              summary: Delivery report callback (deliveryReport)
+      tags:
+      - SMS
+      externalDocs:
+        description: 'DigiHub endpoint reference: Send SMS'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/71
+  /digihub/sms/premium:
+    post:
+      summary: Send SMS Premium
+      operationId: sendSMS-84
+      description: This service will send SMS to Telkomsel MSISDN.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - sms
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: C002190726165745657448250
+                    callback_domain:
+                      description: Partner's callback domain
+                      type: string
+                      example: yourcompanydomain.com
+                sms:
+                  type: object
+                  required:
+                  - recipient
+                  - sms_text
+                  properties:
+                    sender_id:
+                      description: ADN/SMS From
+                      type: string
+                      maxLength: 11
+                      example: YOURCOMPANY
+                    recipient:
+                      description: MSISDN starts with "62" for Indonesia calling code
+                      type: string
+                      example: 62811xxx
+                    sms_text:
+                      description: Sms text is mandatory if template is not exist.
+                      type: string
+                      example: Hello World!
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - sms_information
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  sms_information:
+                    type: object
+                    required:
+                    - message_id
+                    properties:
+                      message_id:
+                        description: SMS Message ID
+                        type: string
+                        example: 18D10100
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Invalid Sender ID:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: INVALID SENDER ID
+        '500':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '40000'
+                  status_desc: Backend Internal Error
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Backend error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Backend unreachable
+        '504':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Backend response timeout
+      callbacks:
+        deliveryReport:
+          https://{$request.body#/transaction/callback_domain}/callback/digihub/smsapi:
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      required:
+                      - transaction_id
+                      - message_id
+                      - status
+                      properties:
+                        transaction_id:
+                          description: Transaction ID
+                          type: string
+                          example: C002190726165745657448250
+                        message_id:
+                          description: SMS Message ID
+                          type: string
+                          example: 18D10100
+                        status:
+                          description: SMS Delivery Status
+                          type: string
+                          example: DELIVRD
+              responses:
+                2XX:
+                  description: Your server implementation should return this HTTP status code if the data was received successfully
+              summary: Delivery report callback (deliveryReport)
+      tags:
+      - SMS
+      externalDocs:
+        description: 'DigiHub endpoint reference: Send SMS'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/84
+  /v1/delivery:
+    get:
+      summary: Get Delivery Status
+      operationId: getDeliveryStatus
+      description: This service as a module to get delivery status which are initiated by developer / partner.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      - in: query
+        name: transaction_id
+        required: true
+        description: Transaction ID
+        schema:
+          type: string
+          example: C002190926121907251312345
+      - in: query
+        name: message_id
+        required: true
+        description: Message ID
+        schema:
+          type: string
+          example: 22D40100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - sms_information
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+                  sms_information:
+                    type: object
+                    required:
+                    - transaction_id
+                    - message_id
+                    - sender_id
+                    - recipient
+                    - status
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190926121907251348411
+                      message_id:
+                        description: SMS Message ID
+                        type: string
+                        example: 22D40100
+                      sender_id:
+                        description: SMS Sender ID
+                        type: string
+                        example: YOURCOMPANY
+                      recipient:
+                        description: Telkomsel MSISDN
+                        type: string
+                        example: 62811xx
+                      status:
+                        description: Status of SMS delivery
+                        type: string
+                        example: DELIVRD
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Invalid Sender ID:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: INVALID SENDER ID
+        '500':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '40000'
+                  status_desc: Backend Internal Error
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Backend error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Backend unreachable
+        '504':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Backend response timeout
+      tags:
+      - SMS
+      externalDocs:
+        description: 'DigiHub endpoint reference: Delivery Status'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/72
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+      description: API Key / Package Key issued per subscribed DigiHub application.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then POST /token). Used by the CAMARA-style SIM Swap API.
+externalDocs:
+  description: DigiHub Consumer Guide
+  url: https://digihub.telkomsel.com/documentation

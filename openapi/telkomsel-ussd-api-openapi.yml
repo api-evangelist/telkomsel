@@ -1,0 +1,630 @@
+openapi: 3.0.3
+info:
+  title: Telkomsel DigiHub APIs Consent Management USSD API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  version: '2026-07-11'
+  contact:
+    url: https://digihub.telkomsel.com/showcase/contactus
+servers:
+- url: https://api.digitalcore.telkomsel.com
+  description: Telkomsel Digital Core API gateway (primary DigiHub production host; some APIs are served from https://digihub.telkomsel.com instead - see path-level servers)
+security:
+- ApiKeyAuth: []
+  SignatureAuth: []
+tags:
+- name: USSD
+  description: USSD broadcast messaging and delivery status.
+paths:
+  /digihub/ussd/broadcast:
+    post:
+      summary: Send USSD
+      operationId: sendUSSD
+      description: API to send USSD message.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - ussd_broadcast
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    transaction_id:
+                      description: Unique Id generated at source
+                      type: string
+                      example: USSDBS190305164243721931830
+                    channel:
+                      description: Channel ID
+                      type: string
+                      example: MP
+                    callback_domain:
+                      description: 'Callback domain of partner should matches the following format : `domain.com/callback/digihub/ussdapi`'
+                      type: string
+                      example: domain.com/callback/digihub/ussdapi
+                ussd_broadcast:
+                  type: object
+                  required:
+                  - mms
+                  - msisdn
+                  - operation_type
+                  - ussd_content
+                  - ussd_short_code
+                  properties:
+                    mms:
+                      description: 'More Message to Send.<br>
+
+                        0 – No more further message.<br>
+
+                        1 – More message to be sent soon (for interactive mode).
+
+                        '
+                      type: string
+                      enum:
+                      - '1'
+                      - '2'
+                      example: '1'
+                    msisdn:
+                      description: Subscriber mobile number
+                      type: string
+                      example: 62811xx
+                    operation_type:
+                      description: 'Operation Service Type<br>
+
+                        NI – non-interactive.<br>
+
+                        IN – interactive.<br>
+
+                        SP – shortcode-push.
+
+                        '
+                      type: string
+                      enum:
+                      - NI
+                      - IN
+                      - SP
+                      example: NI
+                    ussd_content:
+                      description: 'Ussd content in url endcoded format based on the operation type.<br>
+
+                        NI – Must be filled.<br>
+
+                        IN – Must be filled.<br>
+
+                        SP – Must be empty.
+
+                        '
+                      type: string
+                      example: Hello World!
+                    ussd_short_code:
+                      description: 'Ussd ShortCode.<br>
+
+                        NI – Must be empty.<br>
+
+                        IN – Must be empty.<br>
+
+                        SP – Must be filled.
+
+                        '
+                      type: string
+                      example: '*123#'
+            examples:
+              Non Interactive Mode:
+                value:
+                  transaction:
+                    transaction_id: USSDBS190305164243721931830
+                    channel: MP
+                    callback_domain: domain.com/callback/digihub/ussdapi
+                  ussd_broadcast:
+                    mms: '0'
+                    msisdn: 62811xx
+                    operation_type: NI
+                    ussd_content: Test Broadcast
+                    ussd_short_code: ''
+              Interactive Mode:
+                value:
+                  transaction:
+                    transaction_id: USSDBS190305164243721931830
+                    channel: MP
+                    callback_domain: domain.com/callback/digihub/ussdapi
+                  ussd_broadcast:
+                    mms: '1'
+                    msisdn: 62811xx
+                    operation_type: IN
+                    ussd_content: Test Broadcast
+                    ussd_short_code: ''
+              Short-code Push Mode:
+                value:
+                  transaction:
+                    transaction_id: USSDBS190305164243721931830
+                    channel: MP
+                    callback_domain: domain.com/callback/digihub/ussdapi
+                  ussd_broadcast:
+                    mms: '1'
+                    msisdn: 62811xx
+                    operation_type: SP
+                    ussd_content: Test Broadcast
+                    ussd_short_code: '900'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - ussd_broadcast
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - channel
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      channel:
+                        description: Unique ID of the source which had initiated the transaction
+                        type: string
+                        example: MP
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  sms_information:
+                    type: object
+                    required:
+                    - push_reference_id
+                    properties:
+                      push_reference_id:
+                        description: 'Unique reference key, format is `yyyyddMMxxxxxxxx`<br>
+
+                          `y` is year<br>
+
+                          `d` is date<br>
+
+                          `M` is month<br>
+
+                          `x` is random number from timestamp char 3 – 8.
+
+                          '
+                        type: string
+                        example: 2019230154329515
+        '400':
+          description: Invalid mandatory parameter / Empty mandatory parameter / Invalid callback URL
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - channel
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      channel:
+                        description: Unique ID of the source which had initiated the transaction
+                        type: string
+                        example: MP
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Invalid mandatory parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      channel: MP
+                      status_code: '20002'
+                      status_desc: Invalid mandatory parameter
+                    ussd_broadcast:
+                      push_reference_id: '2019230154329515'
+                Empty mandatory parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      channel: MP
+                      status_code: '20003'
+                      status_desc: Empty mandatory parameter
+                    ussd_broadcast:
+                      push_reference_id: '2019230154329515'
+                Invalid callback URL:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      channel: MP
+                      status_code: '20100'
+                      status_desc: Invalid callback URL
+                    ussd_broadcast:
+                      push_reference_id: '2019230154329515'
+        '500':
+          description: Client business error / ESB internal error / TMN communication exception
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - channel
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      channel:
+                        description: Unique ID of the source which had initiated the transaction
+                        type: string
+                        example: MP
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                InvClient business error:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      channel: MP
+                      status_code: '20101'
+                      status_desc: Client business error
+                    ussd_broadcast:
+                      push_reference_id: '2019230154329515'
+                ESB internal error:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      channel: MP
+                      status_code: '40000'
+                      status_desc: ESB internal error
+                    ussd_broadcast:
+                      push_reference_id: '2019230154329515'
+                TMN communication exception:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      channel: MP
+                      status_code: '40004'
+                      status_desc: TMN communication exception
+                    ussd_broadcast:
+                      push_reference_id: '2019230154329515'
+        '502':
+          description: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - channel
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      channel:
+                        description: Unique ID of the source which had initiated the transaction
+                        type: string
+                        example: MP
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  channel: MP
+                  status_code: 30xxx
+                  status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+                ussd_broadcast:
+                  push_reference_id: '2019230154329515'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - channel
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      channel:
+                        description: Unique ID of the source which had initiated the transaction
+                        type: string
+                        example: MP
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  channel: MP
+                  status_code: '10001'
+                  status_desc: Service provider unreachable
+                ussd_broadcast:
+                  push_reference_id: '2019230154329515'
+      callbacks:
+        deliveryReport:
+          https://{$request.body#/transaction/callback_domain}:
+            post:
+              requestBody:
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      required:
+                      - transaction_id
+                      - push_reference_id
+                      - status
+                      - content
+                      properties:
+                        transaction_id:
+                          description: Transaction ID
+                          type: string
+                          example: C002190726165745657448250
+                        push_reference_id:
+                          description: Ussd pusdh reference id
+                          type: string
+                          example: '2018122654329521'
+                        status:
+                          description: Delivery report status
+                          type: string
+                          enum:
+                          - SENDING
+                          - DELIVRD
+                          - UNDELIV
+                          example: DELIVRD
+                        content:
+                          description: Content of delivery, if content contains “error:” then sending ussd is undeliv
+                          type: string
+                          example: 'Yes'
+              responses:
+                2XX:
+                  description: Your server implementation should return this HTTP status code if the data was received successfully
+              summary: Delivery report callback (deliveryReport)
+      tags:
+      - USSD
+      externalDocs:
+        description: 'DigiHub endpoint reference: Send USSD'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/77
+  /digihub/ussd/deliverystatus:
+    get:
+      summary: Get USSD Delivery Status
+      operationId: getUssdDeliveryStatus
+      description: This service as a module to get delivery status which are initiated by developer / partner.
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      - in: query
+        name: transaction_id
+        required: true
+        description: Transaction ID
+        schema:
+          type: string
+          example: C002190926121907251312345
+      - in: query
+        name: push_reference_id
+        required: true
+        description: Ussd pusdh reference id
+        schema:
+          type: string
+          example: 2018122654329521
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - ussd_delivery
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+                  sms_information:
+                    type: object
+                    required:
+                    - transaction_id
+                    - network_reference_id
+                    - push_reference_id
+                    - msisdn
+                    - status
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: USSDBS191015145758378931830
+                      network_reference_id:
+                        description: Network reference id
+                        type: string
+                        example: 00501CB85DA57C06
+                      push_reference_id:
+                        description: Push reference id
+                        type: string
+                        example: '2019151071126278'
+                      msisdn:
+                        description: Subscriber MSISDN
+                        type: string
+                        example: 62811xx
+                      status:
+                        description: Delivery status of USSD
+                        type: string
+                        example: DELIVRD
+        default:
+          description: Non-success response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        type: string
+                        description: Transaction ID
+                        example: C002190726165745657448250
+                      status_code:
+                        type: string
+                        description: Status code
+                        example: '00000'
+                      status_desc:
+                        type: string
+                        description: Status description
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '20001'
+                  status_desc: Empty mandatory parameter
+      tags:
+      - USSD
+      externalDocs:
+        description: 'DigiHub endpoint reference: Delivery Status'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/78
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+      description: API Key / Package Key issued per subscribed DigiHub application.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then POST /token). Used by the CAMARA-style SIM Swap API.
+externalDocs:
+  description: DigiHub Consumer Guide
+  url: https://digihub.telkomsel.com/documentation

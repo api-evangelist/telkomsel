@@ -1,0 +1,448 @@
+openapi: 3.0.3
+info:
+  title: Telkomsel DigiHub APIs Consent Management SIM Swap API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  version: '2026-07-11'
+  contact:
+    url: https://digihub.telkomsel.com/showcase/contactus
+servers:
+- url: https://api.digitalcore.telkomsel.com
+  description: Telkomsel Digital Core API gateway (primary DigiHub production host; some APIs are served from https://digihub.telkomsel.com instead - see path-level servers)
+security:
+- ApiKeyAuth: []
+  SignatureAuth: []
+tags:
+- name: SIM Swap
+  description: SIM swap detection - marketplace SIM Swap v2 and the CAMARA-style /sim-swap/v0 API with CIBA auth.
+paths:
+  /digihub/subscheck/simswapv2:
+    servers:
+    - url: https://digihub.telkomsel.com
+    post:
+      summary: add data sms
+      operationId: addSms
+      description: 'By passing in the appropriate options, you can search for
+
+        available
+
+        '
+      tags:
+      - SIM Swap
+      parameters:
+      - in: header
+        name: api_key
+        example: '[api_key]'
+        description: api key from digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: '[x-signature]'
+        description: SHA256(apiKey+secretKey+timeStamp)
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: string
+                  example: data
+                message:
+                  type: string
+                  example: message
+      responses:
+        '200':
+          description: Results Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Success
+        '403':
+          description: Invalid Key or Secret
+      externalDocs:
+        description: 'DigiHub endpoint reference: Simple Digihub API'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/156
+  /check:
+    servers:
+    - url: https://digihub.telkomsel.com/sim-swap/v0
+    post:
+      tags:
+      - SIM Swap
+      description: Check if SIM swap has been performed during a past period
+      operationId: checkSimSwap
+      parameters:
+      - in: header
+        name: X-Authorization
+        example: '[X-token]'
+        description: Bearer X-token
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: 'Create a check SIM swap request for a MSISDN identifier.
+
+          '
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - phoneNumber
+              properties:
+                phoneNumber:
+                  type: string
+                  pattern: ^\+?[0-9]{5,15}$
+                  example: '+346661113334'
+                  description: Subscriber number in E.164 format (starting with country code). Optionally prefixed with '+'.
+                maxAge:
+                  type: integer
+                  example: 240
+                  description: 'Period in hours to be checked for SIM swap.
+
+                    '
+                  format: int32
+                  minimum: 1
+                  maximum: 2400
+                  default: 240
+        required: true
+      responses:
+        '200':
+          description: Returns whether a SIM swap has been performed during a past period
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  swapped:
+                    type: boolean
+                    description: Indicates whether the SIM card has been swapped during the period within the provided age.
+        '400':
+          description: Problem with the client request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 400
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param
+        '401':
+          description: Authentication problem with the client request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 401
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials
+        '403':
+          description: Client does not have sufficient permission
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 403
+                code: PERMISSION_DENIED
+                message: Client does not have sufficient permissions to perform this action
+        '404':
+          description: Resource Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 404
+                code: SIM_SWAP.UNKNOWN_PHONE_NUMBER
+                message: SIM Swap can't be checked because the phone number is unknown.
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 409
+                code: CONFLICT
+                message: Another request is created for the same MSISDN
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 500
+                code: INTERNAL
+                message: Server error
+        '503':
+          description: Service unavailable. Typically the server is down
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 503
+                code: UNAVAILABLE
+                message: Service unavailable
+        '504':
+          description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - status
+                - code
+                - message
+                properties:
+                  status:
+                    type: integer
+                    description: HTTP response status code
+                  code:
+                    type: string
+                    description: Code given to this error
+                  message:
+                    type: string
+                    description: Detailed error description
+              example:
+                status: 504
+                code: TIMEOUT
+                message: Request timeout exceeded. Try later
+      summary: SIM Swap
+      security:
+      - BearerAuth: []
+      externalDocs:
+        description: 'DigiHub endpoint reference: SIM Swap'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/189
+  /bc-authorize:
+    servers:
+    - url: https://digihub.telkomsel.com
+    post:
+      summary: Authorize endpoint
+      description: Authorize a user
+      parameters:
+      - in: header
+        name: X-Client-Id
+        example: '[api-key]'
+        description: Client ID from digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Client-Secret
+        example: secret
+        description: Client Secret from digihub
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                login_hint:
+                  type: string
+                  example: '+628118115352'
+                scope:
+                  type: string
+                  example: openid
+      responses:
+        '200':
+          description: Successful authorization
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      tags:
+      - SIM Swap
+      operationId: API-Documentation
+      security:
+      - BearerAuth: []
+      externalDocs:
+        description: 'DigiHub endpoint reference: API Documentation'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/191
+  /token:
+    servers:
+    - url: https://digihub.telkomsel.com
+    post:
+      summary: Get token endpoint
+      description: Get token a user
+      parameters:
+      - in: header
+        name: X-Client-Id
+        example: '[api-key]'
+        description: Client ID from digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Client-Secret
+        example: secret
+        description: Client Secret from digihub
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  example: urn:openid:params:grant-type:ciba
+                auth_req_id:
+                  type: string
+                  example: _SZ60a193TJQz84jBCU0MNKR8mgVQASqp4gOv-Un13zmK-5b9lOyZMczswzETC98jYKEVR6tv7k2BxpXIl9rxA
+      responses:
+        '200':
+          description: Successful generate token
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+      tags:
+      - SIM Swap
+      operationId: API-Documentation-192
+      security:
+      - BearerAuth: []
+      externalDocs:
+        description: 'DigiHub endpoint reference: API Documentation'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/192
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+      description: API Key / Package Key issued per subscribed DigiHub application.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then POST /token). Used by the CAMARA-style SIM Swap API.
+externalDocs:
+  description: DigiHub Consumer Guide
+  url: https://digihub.telkomsel.com/documentation

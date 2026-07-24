@@ -1,0 +1,1616 @@
+openapi: 3.0.3
+info:
+  title: Telkomsel DigiHub APIs Consent Management Scoring and Insights API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  version: '2026-07-11'
+  contact:
+    url: https://digihub.telkomsel.com/showcase/contactus
+servers:
+- url: https://api.digitalcore.telkomsel.com
+  description: Telkomsel Digital Core API gateway (primary DigiHub production host; some APIs are served from https://digihub.telkomsel.com instead - see path-level servers)
+security:
+- ApiKeyAuth: []
+  SignatureAuth: []
+tags:
+- name: Scoring and Insights
+  description: Telco-data scores - tScore, generic telco score, SES, interest, lifestyle, loyalist.
+paths:
+  /digihub/v1/tscore/premium:
+    servers:
+    - url: https://digihub.telkomsel.com
+    post:
+      summary: API tScore Premium
+      operationId: telcoScore
+      description: This API tScore Premium can leverage telco’s dynamic subscriber profiling of a Mobile Station International Subscriber Directory Number (MSISDN) based on user’s behavioural activities, mobility patterns and link analysis of social network with other subscribers to formulate a financial rating for the user which then can be used by Financial Institutions to formulate generic telco score all Tekomsel’s MSISDN subscribers based on their telco data
+      parameters:
+      - in: header
+        name: api_key
+        example: '[api_key]'
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: '[x-signature]'
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-key-api-secret)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - request
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - transaction_id
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: C002190726165745657448250
+                request:
+                  type: object
+                  required:
+                  - msisdn
+                  - table_code
+                  properties:
+                    msisdn:
+                      description: Customer Service ID. (MSISDN for Telkomsel subscriber) starts with “62” for Indonesia calling code.
+                      type: string
+                      example: '6281299999999'
+                    table_code:
+                      description: table_code value will be mapped to a table score which is specific for each partner
+                      type: string
+                      example: mwa0adianwaxagqamqbk
+                consent:
+                  type: object
+                  required:
+                  - consent_id
+                  - partner_id
+                  properties:
+                    consent_id:
+                      description: Consent id which is registered
+                      type: string
+                      example: XvbWQQhjc06MeEEb/6dxC6j3PCNi7tN6myM+s8E8bCfnRawaTfvRw+4KdBoZSdfgMcUHuIkseSqCNN+aubtwYW/fkLS/wQp8AMI854jJoQ==
+                    partner_id:
+                      description: Partner identification given by Telkomsel.
+                      type: string
+                      example: TfbQQQhjcxLmEzZ61NYMEtbHG1cahqRVghRW2aV1OzjsRagYGviEyOhbMR4=
+      responses:
+        '200':
+          description: Success (the score result shows the probability score of default if given a loan product, it ranges from 0 to 1. the higher the score the riskier the customer).
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - response
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status Code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status Description
+                        type: string
+                        example: Success
+                  response:
+                    type: object
+                    required:
+                    - score
+                    properties:
+                      score:
+                        description: A decimal/integer string representing score of default probability of an MSISDN
+                        type: string
+                        example: '0.0018529155567403996'
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20001'
+                    status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20002'
+                    status_desc: INVALID MSISDN
+                Invalid Timestamp:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20101'
+                    status_desc: Invalid Timestamp
+        '500':
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '40000'
+                status_desc: ESB Internal Error
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: 30xxx
+                status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '10001'
+                status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '10004'
+                status_desc: Service provider response timeout
+      tags:
+      - Scoring and Insights
+      externalDocs:
+        description: 'DigiHub endpoint reference: API tScore Premium'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/129
+  /digihub/v1/generic/telco/score:
+    post:
+      summary: API Generic Telco Score
+      operationId: telcoScore-125
+      description: This API Generic Telco Score can leverage telco’s dynamic subscriber profiling of a Mobile Station International Subscriber Directory Number (MSISDN) based on user’s behavioural activities, mobility patterns and link analysis of social network with other subscribers to formulate a financial rating for the user which then can be used by Financial Institutions to formulate generic telco score all Tekomsel’s MSISDN subscribers based on their telco data
+      parameters:
+      - in: header
+        name: api_key
+        example: '[api_key]'
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: '[x-signature]'
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-key-api-secret)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - request
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  required:
+                  - transaction_id
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: C002190726165745657448250
+                request:
+                  type: object
+                  required:
+                  - msisdn
+                  - table_code
+                  properties:
+                    msisdn:
+                      description: Customer Service ID. (MSISDN for Telkomsel subscriber) starts with “62” for Indonesia calling code.
+                      type: string
+                      example: '6281299999999'
+                    table_code:
+                      description: table_code value will be mapped to a table score which is specific for each partner
+                      type: string
+                      example: testonlytable
+                consent:
+                  type: object
+                  required:
+                  - consent_id
+                  - partner_id
+                  properties:
+                    consent_id:
+                      description: Consent id which is registered
+                      type: string
+                      example: XvbWQQhjc06MeEEb/6dxC6j3PCNi7tN6myM+s8E8bCfnRawaTfvRw+4KdBoZSdfgMcUHuIkseSqCNN+aubtwYW/fkLS/wQp8AMI854jJoQ==
+                    partner_id:
+                      description: Partner identification given by Telkomsel.
+                      type: string
+                      example: TfbQQQhjcxLmEzZ61NYMEtbHG1cahqRVghRW2aV1OzjsRagYGviEyOhbMR4=
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - response
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status Code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status Description
+                        type: string
+                        example: Success
+                  response:
+                    type: object
+                    required:
+                    - score
+                    properties:
+                      score:
+                        description: A decimal/integer string representing score of default probability of an MSISDN
+                        type: string
+                        example: '0.0599547597649327'
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20001'
+                    status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20002'
+                    status_desc: INVALID MSISDN
+                Invalid Timestamp:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20101'
+                    status_desc: Invalid Timestamp
+        '500':
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '40000'
+                status_desc: ESB Internal Error
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: 30xxx
+                status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '10001'
+                status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: C002190726165745657448250
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20012'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: table_code is not exist
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '10004'
+                status_desc: Service provider response timeout
+      tags:
+      - Scoring and Insights
+      externalDocs:
+        description: 'DigiHub endpoint reference: API Generic Telco Score'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/125
+  /digihub/subscheck/sesv2:
+    post:
+      summary: SES v2
+      operationId: SES-v2
+      description: SES v2
+      parameters:
+      - in: header
+        name: api_key
+        example: '[api_key]'
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: '[x-signature]'
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-key-api-secret)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: '1643624695_00000001'
+                    consent_id:
+                      description: Customer consent id
+                      type: string
+                      example: consent_01
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code
+                      type: string
+                      example: '6281212600303'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: '1643624695_00000001'
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '00000'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: Success
+                  score:
+                    description: Status Description
+                    type: string
+                    example: A
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: trx001
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20101'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: Data not Found
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20001'
+                    status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20002'
+                    status_desc: INVALID MSISDN
+                Invalid Timestamp:
+                  value:
+                    transaction_id: C002190726165745657448250
+                    status_code: '20101'
+                    status_desc: Invalid Timestamp
+        '500':
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: trx001
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20101'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: Data not Found
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '40000'
+                status_desc: ESB Internal Error
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: trx001
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20101'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: Data not Found
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: 30xxx
+                status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: trx001
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20101'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: Data not Found
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '10001'
+                status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction_id:
+                    description: Transaction ID
+                    type: string
+                    example: trx001
+                  status_code:
+                    description: Status Code
+                    type: string
+                    example: '20101'
+                  status_desc:
+                    description: Status Description
+                    type: string
+                    example: Data not Found
+              example:
+                transaction_id: C002190726165745657448250
+                status_code: '10004'
+                status_desc: Service provider response timeout
+      tags:
+      - Scoring and Insights
+      externalDocs:
+        description: 'DigiHub endpoint reference: SES v2'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/144
+  /digihub/subscheck/interestv2:
+    post:
+      summary: Interest v2
+      operationId: Interest-v2
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: '1643624695_00000187'
+                    consent_id:
+                      description: Customer consent id
+                      type: string
+                      example: consent123
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code
+                      type: string
+                      example: 628221991111
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                      result:
+                        description: Status descriptiona
+                        type: string
+                        example:
+                        - TV Streamer
+                        - Insurance
+                        - Religion-Islam
+                        - Pop-culture
+                        - Photography & Design
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                      result:
+                        description: Status descriptiona
+                        type: string
+                        example:
+                        - TV Streamer
+                        - Insurance
+                        - Religion-Islam
+                        - Pop-culture
+                        - Photography & Design
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Subscriber MSISDN Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: Subscriber MSISDN Not Found
+                Code Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20009'
+                      status_desc: Code Not Found
+                Partner Not Allow:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20013'
+                      status_desc: Partner Not Allow
+                Customer Not Consent:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20014'
+                      status_desc: Customer Not Consent
+                Consent expired:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20015'
+                      status_desc: Consent expired
+                Invalid command value:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20121'
+                      status_desc: Invalid command value
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                      result:
+                        description: Status descriptiona
+                        type: string
+                        example:
+                        - TV Streamer
+                        - Insurance
+                        - Religion-Islam
+                        - Pop-culture
+                        - Photography & Design
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                      result:
+                        description: Status descriptiona
+                        type: string
+                        example:
+                        - TV Streamer
+                        - Insurance
+                        - Religion-Islam
+                        - Pop-culture
+                        - Photography & Design
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: '1643624695_00000187'
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                      result:
+                        description: Status descriptiona
+                        type: string
+                        example:
+                        - TV Streamer
+                        - Insurance
+                        - Religion-Islam
+                        - Pop-culture
+                        - Photography & Design
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Service provider response timeout
+      tags:
+      - Scoring and Insights
+      externalDocs:
+        description: 'DigiHub endpoint reference: Interest v2'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/141
+  /digihub/lifestyle-score:
+    post:
+      summary: Lifestyle Score
+      operationId: lifestyleScore
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: C002190726165745657448250
+                    command:
+                      description: Service Type
+                      type: string
+                      enum:
+                      - getScoreSegment
+                      example: getScoreSegment
+                consent:
+                  type: object
+                  required:
+                  - msisdn
+                  - consent_id
+                  - code
+                  properties:
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code
+                      type: string
+                      example: 62811xx
+                    consent_id:
+                      description: Consent id which is registered
+                      type: string
+                      example: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code:
+                      description: Code api identification given by Telkomsel
+                      type: string
+                      example: phu4ht95hxt55qnsmz8apxvj
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - result
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  result:
+                    type: object
+                    required:
+                    - score
+                    properties:
+                      score:
+                        description: CustomerCustomer Score (0-100)
+                        type: string
+                        example: 80
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Subscriber MSISDN Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: Subscriber MSISDN Not Found
+                Code Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20009'
+                      status_desc: Code Not Found
+                Partner Not Allow:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20013'
+                      status_desc: Partner Not Allow
+                Customer Not Consent:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20014'
+                      status_desc: Customer Not Consent
+                Consent expired:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20015'
+                      status_desc: Consent expired
+                Invalid command value:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20121'
+                      status_desc: Invalid command value
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Service provider response timeout
+      tags:
+      - Scoring and Insights
+      externalDocs:
+        description: 'DigiHub endpoint reference: Lifestyle Score'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/88
+  /digihub/loyalist:
+    post:
+      summary: Customer Loyalty
+      operationId: customerLoyalty
+      parameters:
+      - in: header
+        name: api_key
+        example: e688u2hgpkzjd244wecywwv8
+        description: API Key / Package Key from Digihub
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: x-signature
+        example: ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea
+        description: SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: Content-Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - transaction
+              - consent
+              properties:
+                transaction:
+                  type: object
+                  properties:
+                    transaction_id:
+                      description: Transaction ID
+                      type: string
+                      example: C002190726165745657448250
+                    command:
+                      description: Service Type
+                      type: string
+                      enum:
+                      - isLoyalt
+                      example: isLoyalt
+                consent:
+                  type: object
+                  required:
+                  - msisdn
+                  - consent_id
+                  - code
+                  properties:
+                    msisdn:
+                      description: MSISDN starts with “62” for Indonesia calling code
+                      type: string
+                      example: 62811xx
+                    consent_id:
+                      description: Consent id which is registered
+                      type: string
+                      example: Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==
+                    code:
+                      description: Code api identification given by Telkomsel
+                      type: string
+                      example: phu4ht95hxt55qnsmz8apxvj
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                - result
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+                  result:
+                    type: object
+                    required:
+                    - isLoyal
+                    properties:
+                      isLoyal:
+                        description: Customer loyalty (Yes/No)
+                        type: string
+                        enum:
+                        - 'Yes'
+                        - 'No'
+                        example: 'Yes'
+        '400':
+          description: Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              examples:
+                Empty Mandatory Parameter:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20001'
+                      status_desc: Empty mandatory parameter
+                Invalid MSISDN:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20002'
+                      status_desc: INVALID MSISDN
+                Subscriber MSISDN Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20003'
+                      status_desc: Subscriber MSISDN Not Found
+                Code Not Found:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20009'
+                      status_desc: Code Not Found
+                Partner Not Allow:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20013'
+                      status_desc: Partner Not Allow
+                Customer Not Consent:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20014'
+                      status_desc: Customer Not Consent
+                Consent expired:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20015'
+                      status_desc: Consent expired
+                Invalid command value:
+                  value:
+                    transaction:
+                      transaction_id: C002190726165745657448250
+                      status_code: '20121'
+                      status_desc: Invalid command value
+        '502':
+          description: Backend Internal Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: 30xxx
+                  status_desc: 'Service provider error: {consumer}-{provider}-{service provider error description}'
+        '503':
+          description: Service provider unreachable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10001'
+                  status_desc: Service provider unreachable
+        '504':
+          description: Service provider response timeout
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - transaction
+                properties:
+                  transaction:
+                    type: object
+                    required:
+                    - transaction_id
+                    - status_code
+                    - status_desc
+                    properties:
+                      transaction_id:
+                        description: Transaction ID
+                        type: string
+                        example: C002190726165745657448250
+                      status_code:
+                        description: Status code
+                        type: string
+                        example: '00000'
+                      status_desc:
+                        description: Status descriptiona
+                        type: string
+                        example: Success
+              example:
+                transaction:
+                  transaction_id: C002190726165745657448250
+                  status_code: '10004'
+                  status_desc: Service provider response timeout
+      tags:
+      - Scoring and Insights
+      externalDocs:
+        description: 'DigiHub endpoint reference: Loyalist'
+        url: https://digihub.telkomsel.com/apis/V2/endpoint/76
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api_key
+      description: API Key / Package Key issued per subscribed DigiHub application.
+    SignatureAuth:
+      type: apiKey
+      in: header
+      name: x-signature
+      description: SHA256(API Key + Secret Key + current epoch timestamp in seconds, UTC). Required alongside api_key on every request. See https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Bearer access token obtained via the OIDC CIBA flow (POST /bc-authorize then POST /token). Used by the CAMARA-style SIM Swap API.
+externalDocs:
+  description: DigiHub Consumer Guide
+  url: https://digihub.telkomsel.com/documentation
