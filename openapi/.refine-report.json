@@ -1,0 +1,28 @@
+{
+  "provider": "telkomsel",
+  "sources": [
+    "telkomsel-consent-management-api-openapi.yml",
+    "telkomsel-identity-verification-api-openapi.yml",
+    "telkomsel-location-api-openapi.yml",
+    "telkomsel-scoring-and-insights-api-openapi.yml",
+    "telkomsel-sim-swap-api-openapi.yml",
+    "telkomsel-sms-api-openapi.yml",
+    "telkomsel-subscriber-check-api-openapi.yml",
+    "telkomsel-ussd-api-openapi.yml"
+  ],
+  "outputs": [
+    "telkomsel-consent-management-api-openapi.yml",
+    "telkomsel-identity-verification-api-openapi.yml",
+    "telkomsel-location-api-openapi.yml",
+    "telkomsel-scoring-and-insights-api-openapi.yml",
+    "telkomsel-sim-swap-api-openapi.yml",
+    "telkomsel-sms-api-openapi.yml",
+    "telkomsel-subscriber-check-api-openapi.yml",
+    "telkomsel-ussd-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
