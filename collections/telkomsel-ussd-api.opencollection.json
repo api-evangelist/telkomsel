@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telkomsel DigiHub APIs Consent Management USSD API",
+    "version": "2026-07-11"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "USSD",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send USSD",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/ussd/broadcast",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "API to send USSD message."
+        },
+        {
+          "info": {
+            "name": "Get USSD Delivery Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/ussd/deliverystatus",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "transaction_id",
+                "value": "",
+                "type": "query",
+                "description": "Transaction ID"
+              },
+              {
+                "name": "push_reference_id",
+                "value": "",
+                "type": "query",
+                "description": "Ussd pusdh reference id"
+              }
+            ]
+          },
+          "docs": "This service as a module to get delivery status which are initiated by developer / partner."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

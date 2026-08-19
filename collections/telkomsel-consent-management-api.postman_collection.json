@@ -1,0 +1,250 @@
+{
+  "item": [
+    {
+      "id": "298d9173-f67d-46ae-ac35-c99b50500e47",
+      "name": "Consent Management",
+      "description": {
+        "content": "Register customer consent required by subscriber-data products.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d2eaf8ba-d4fa-4364-b400-c65ffb0d8c06",
+          "name": "Consent Management",
+          "request": {
+            "name": "Consent Management",
+            "description": {},
+            "url": {
+              "path": [
+                "digihub",
+                "v2",
+                "consentmgmt"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) API Key / Package Key from Digihub",
+                "key": "api_key",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                "key": "x-signature",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"<string>\"\n  },\n  \"consent\": {\n    \"partner_id\": \"<string>\",\n    \"product_id\": \"<string>\",\n    \"msisdn\": \"<string>\",\n    \"customer_name\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dd3d2e4c-613e-4bfb-8412-fd3db66fc629",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "consentmgmt"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"transaction_id\"\n  },\n  \"consent\": {\n    \"partner_id\": \"TfbQQR5oaTqWb0dp5qdr48BnHksBwSmqkI2BVC17ghPRtHbJSJSJSKR/nIw+EPblJPHd/iNsUC9Nwmfis=\",\n    \"product_id\": \"TerGQR4897hJDkBvvcgUK/cYUV7rhKil87rBi7zYvtcZgDCejRhdskksksUnOEXPklNGcrhaMEFuIhwLnmCMI7PvK54YjrQ3OHv\",\n    \"msisdn\": \"08148xxxx\",\n    \"customer_name\": \"Ferguso\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C0022112012345642699000000-TID-168794623\",\n    \"status_code\": \"00000\",\n    \"status_desc\": \"Success\"\n  },\n  \"consent\": {\n    \"consent_id\": \"XvbWQR5oaTqWb0dp5qdrINbcsja/tJi+D8+o95gdzWeN8liKI3FqYx7XCosC7HnLMZTrdskKsjfskfnsyec7up/Z2mK2e+5mhd/VcY984jP8f7ysRBy7XRFT+ueou4UZjg3E3Q=\",\n    \"expired_date\": \"2022-02-12T16:05:35.258489+07:00\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b107079-6d48-4ecb-8ff9-a090e2421a0a",
+              "name": "Consent still active / invalid MSISDN / invalid Product ID / invalid Partner ID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "consentmgmt"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"transaction_id\"\n  },\n  \"consent\": {\n    \"partner_id\": \"TfbQQR5oaTqWb0dp5qdr48BnHksBwSmqkI2BVC17ghPRtHbJSJSJSKR/nIw+EPblJPHd/iNsUC9Nwmfis=\",\n    \"product_id\": \"TerGQR4897hJDkBvvcgUK/cYUV7rhKil87rBi7zYvtcZgDCejRhdskksksUnOEXPklNGcrhaMEFuIhwLnmCMI7PvK54YjrQ3OHv\",\n    \"msisdn\": \"08148xxxx\",\n    \"customer_name\": \"Ferguso\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002211201144342699000000-TID-1638344623\",\n    \"status_code\": \"20015\",\n    \"status_desc\": \"Consent Still Active\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.digitalcore.telkomsel.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "af6cc780-9f1c-49cf-9188-3baf4d5a9f9a",
+    "name": "Telkomsel DigiHub APIs Consent Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.",
+      "type": "text/plain"
+    }
+  }
+}

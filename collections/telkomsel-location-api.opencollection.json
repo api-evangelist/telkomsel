@@ -1,0 +1,84 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telkomsel DigiHub APIs Consent Management Location API",
+    "version": "2026-07-11"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Location",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Location Verification v3",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/locationverificationv3",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "API to GET score location customer."
+        },
+        {
+          "info": {
+            "name": "This API will provide insight regarding location (city level) of targeted customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/lastlocation",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API will provide insight regarding location (city level) of targeted customer"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

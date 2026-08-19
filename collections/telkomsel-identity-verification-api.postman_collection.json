@@ -1,0 +1,1377 @@
+{
+  "item": [
+    {
+      "id": "665ecdd3-5341-40ce-af5f-ef98f441cce6",
+      "name": "Identity Verification",
+      "description": {
+        "content": "NIK/MSISDN pairing, KTP matching, and general ID verification against SIM-registration data.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "dfe71212-497e-4f85-9104-3933dac2d2ec",
+          "name": "NIK Matching v4",
+          "request": {
+            "name": "NIK Matching v4",
+            "description": {
+              "content": "This service is use to check pair of KTP with msisdn. This API will enable Government or Enterprise to know if NIK and MSISDN are paired according to Telkomsel Registration Process. Telkomsel will just respond with Score.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "digihub",
+                "subscheck",
+                "nikmatchingv4"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) API Key / Package Key from Digihub",
+                "key": "api_key",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                "key": "x-signature",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"<string>\",\n    \"consent_id\": \"<string>\",\n    \"msisdn\": \"<string>\"\n  },\n  \"parameter\": {\n    \"nik\": \"<string>\",\n    \"channel\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2e1c63e2-cae7-495f-95f5-6ddff4402270",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "subscheck",
+                    "nikmatchingv4"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"1643624695_00000187\",\n    \"consent_id\": \"consent_01\",\n    \"msisdn\": \"628111334831\"\n  },\n  \"parameter\": {\n    \"nik\": \"<string>\",\n    \"channel\": \"of\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"1643624695_00000187\",\n    \"status_code\": \"00000\",\n    \"status_desc\": \"Success\",\n    \"score\": \"2\"\n  },\n  \"ktpmatch_information\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9f8ef66a-ddd7-46aa-97c2-757b8f4330ae",
+              "name": "Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "subscheck",
+                    "nikmatchingv4"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"1643624695_00000187\",\n    \"consent_id\": \"consent_01\",\n    \"msisdn\": \"628111334831\"\n  },\n  \"parameter\": {\n    \"nik\": \"<string>\",\n    \"channel\": \"of\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"20001\",\n    \"status_desc\": \"Empty mandatory parameter\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4acbb643-2aff-488b-9069-e2ced674321a",
+              "name": "Backend Internal Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "subscheck",
+                    "nikmatchingv4"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"1643624695_00000187\",\n    \"consent_id\": \"consent_01\",\n    \"msisdn\": \"628111334831\"\n  },\n  \"parameter\": {\n    \"nik\": \"<string>\",\n    \"channel\": \"of\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"30xxx\",\n    \"status_desc\": \"Service provider error: {consumer}-{provider}-{service provider error description}\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a7ae2a0d-373a-46d0-9a77-330eb2de3e3e",
+              "name": "Service provider unreachable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "subscheck",
+                    "nikmatchingv4"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"1643624695_00000187\",\n    \"consent_id\": \"consent_01\",\n    \"msisdn\": \"628111334831\"\n  },\n  \"parameter\": {\n    \"nik\": \"<string>\",\n    \"channel\": \"of\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"10001\",\n    \"status_desc\": \"Service provider unreachable\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "100d47f7-10b5-4228-9f78-6bd1398eb919",
+              "name": "Service provider response timeout",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "subscheck",
+                    "nikmatchingv4"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"1643624695_00000187\",\n    \"consent_id\": \"consent_01\",\n    \"msisdn\": \"628111334831\"\n  },\n  \"parameter\": {\n    \"nik\": \"<string>\",\n    \"channel\": \"of\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Gateway Timeout",
+              "code": 504,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"10004\",\n    \"status_desc\": \"Service provider response timeout\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b8c0a945-8649-4f12-8ae2-36ba26b50673",
+          "name": "KTP Match",
+          "request": {
+            "name": "KTP Match",
+            "description": {
+              "content": "This service is use to check pair of KTP with msisdn. This API will enable Government or Enterprise to know if NIK and MSISDN are paired according to Telkomsel Registration Process. Telkomsel will just respond with Score.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "digihub",
+                "ktp",
+                "match",
+                "v2"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) API Key / Package Key from Digihub",
+                "key": "api_key",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                "key": "x-signature",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"<string>\",\n    \"nik\": \"<string>\"\n  },\n  \"consent\": {\n    \"msisdn\": \"<string>\",\n    \"consent_id\": \"<string>\",\n    \"code\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "162d6be2-dc78-4b7f-9ac9-1eb40cefc1c8",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "ktp",
+                    "match",
+                    "v2"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"nik\": \"331218050xxxxx\"\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xxx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"n453ajpqnv5tyrb85eyg22x7\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"00000\",\n    \"status_desc\": \"Success\"\n  },\n  \"sms_information\": {\n    \"score\": \"1\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6cc089d6-b034-4e99-92b5-45aacfc642ff",
+              "name": "Empty Mandatory Parameter / Invalid MSISDN / Invalid Sender ID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "ktp",
+                    "match",
+                    "v2"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"nik\": \"331218050xxxxx\"\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xxx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"n453ajpqnv5tyrb85eyg22x7\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"20001\",\n    \"status_desc\": \"Empty mandatory parameter\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bf563396-a115-4735-a2c9-5d18fe84dfa9",
+              "name": "Backend Internal Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "ktp",
+                    "match",
+                    "v2"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"nik\": \"331218050xxxxx\"\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xxx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"n453ajpqnv5tyrb85eyg22x7\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"30xxx\",\n    \"status_desc\": \"Service provider error: {consumer}-{provider}-{service provider error description}\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c7a4a03f-8dee-407c-aba2-256197a1b08a",
+              "name": "Service provider unreachable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "ktp",
+                    "match",
+                    "v2"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"nik\": \"331218050xxxxx\"\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xxx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"n453ajpqnv5tyrb85eyg22x7\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"10001\",\n    \"status_desc\": \"Service provider unreachable\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "63352df1-d54b-4bb7-a44c-f80d05dab49a",
+              "name": "Service provider response timeout",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "ktp",
+                    "match",
+                    "v2"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"nik\": \"331218050xxxxx\"\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xxx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"n453ajpqnv5tyrb85eyg22x7\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Gateway Timeout",
+              "code": 504,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"C002190726165745657448250\",\n    \"status_code\": \"10004\",\n    \"status_desc\": \"Service provider response timeout\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "301a21c1-409d-44e6-b9e9-e6b3d4595fa9",
+          "name": "ID Verification V2",
+          "request": {
+            "name": "ID Verification V2",
+            "description": {
+              "content": "API to GET score location customer.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "digihub",
+                "v2",
+                "idverification"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) API Key / Package Key from Digihub",
+                "key": "api_key",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                "key": "x-signature",
+                "value": "<string>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transaction\": {\n    \"home_work\": \"<string>\",\n    \"transaction_id\": \"<string>\",\n    \"long\": \"<string>\",\n    \"lat\": \"<string>\",\n    \"address\": \"<string>\",\n    \"zip_code\": \"<string>\"\n  },\n  \"sms\": {\n    \"msisdn\": \"<string>\",\n    \"consent_id\": \"<string>\",\n    \"code\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "88631c1b-3990-4a31-95e0-7e746d062596",
+              "name": "Success",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "idverification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"home_work\": \"1\",\n    \"long\": -6.247895,\n    \"lat\": 106.821312,\n    \"address\": null,\n    \"zip_code\": null\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"y473hkpghfmju7zxmtdjgfkr\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": \"string\",\n    \"status_code\": \"00000\",\n    \"status_desc\": \"Success\"\n  },\n  \"sms_information\": {\n    \"msisdn\": \"62811xx\",\n    \"score\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4cf7a0dd-5151-48cf-8011-22cbfeb97e06",
+              "name": "Empty mandatory parameter / Invalid MSISDN / Invalid Format Request / Data Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "idverification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"home_work\": \"1\",\n    \"long\": -6.247895,\n    \"lat\": 106.821312,\n    \"address\": null,\n    \"zip_code\": null\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"y473hkpghfmju7zxmtdjgfkr\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"status_code\": \"20001\",\n    \"status_desc\": \"Empty mandatory parameter\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6fb00901-6fdd-4113-8ba3-0e4717248f9f",
+              "name": "ESB internal error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "idverification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"home_work\": \"1\",\n    \"long\": -6.247895,\n    \"lat\": 106.821312,\n    \"address\": null,\n    \"zip_code\": null\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"y473hkpghfmju7zxmtdjgfkr\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"status_code\": \"40000\",\n    \"status_desc\": \"ESB internal error\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fff11b3d-0701-4c30-b54f-165c8067a696",
+              "name": "Service provider error: {consumer}-{provider}-{service provider error description}",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "idverification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"home_work\": \"1\",\n    \"long\": -6.247895,\n    \"lat\": 106.821312,\n    \"address\": null,\n    \"zip_code\": null\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"y473hkpghfmju7zxmtdjgfkr\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"status_code\": \"30xxx\",\n    \"status_desc\": \"Service provider error: {consumer}-{provider}-{service provider error description}\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6ff40c5-dab7-4440-ab91-babd968e945a",
+              "name": "Service provider unreachable",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "idverification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"home_work\": \"1\",\n    \"long\": -6.247895,\n    \"lat\": 106.821312,\n    \"address\": null,\n    \"zip_code\": null\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"y473hkpghfmju7zxmtdjgfkr\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"status_code\": \"10001\",\n    \"status_desc\": \"Service provider unreachable\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2de3be3a-2330-4944-ade9-0bde5e0e15b8",
+              "name": "Service provider response timeout",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "digihub",
+                    "v2",
+                    "idverification"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "api_key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API Key / Package Key from Digihub",
+                    "key": "api_key",
+                    "value": "e688u2hgpkzjd244wecywwv8"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) SHA256 (API Key + Secret Key + timeStamp). [More info](https://digihub.telkomsel.com/documentation/consumer-guide/api-authentication)",
+                    "key": "x-signature",
+                    "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) ",
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"home_work\": \"1\",\n    \"long\": -6.247895,\n    \"lat\": 106.821312,\n    \"address\": null,\n    \"zip_code\": null\n  },\n  \"consent\": {\n    \"msisdn\": \"62811xx\",\n    \"consent_id\": \"Ek2arznC2uxeknsXbvdCChqbjAU1SBJ3qUoHEH19y4O74GxZzG0mUKKI/tuHPNbN2KNd+JZ3fYoodC/24A==\",\n    \"code\": \"y473hkpghfmju7zxmtdjgfkr\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Gateway Timeout",
+              "code": 504,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transaction\": {\n    \"transaction_id\": 40520181127010000,\n    \"status_code\": \"10004\",\n    \"status_desc\": \"Service provider response timeout\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.digitalcore.telkomsel.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "api_key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a2418988-774c-4095-9ff3-4233f8ca84b3",
+    "name": "Telkomsel DigiHub APIs Consent Management Identity Verification API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.",
+      "type": "text/plain"
+    }
+  }
+}

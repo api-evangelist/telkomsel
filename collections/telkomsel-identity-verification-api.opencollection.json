@@ -1,0 +1,113 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telkomsel DigiHub APIs Consent Management Identity Verification API",
+    "version": "2026-07-11"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Identity Verification",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "NIK Matching v4",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/nikmatchingv4",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This service is use to check pair of KTP with msisdn. This API will enable Government or Enterprise to know if NIK and MSISDN are paired according to Telkomsel Registration Process. Telkomsel will just respond with Score."
+        },
+        {
+          "info": {
+            "name": "KTP Match",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/ktp/match/v2",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This service is use to check pair of KTP with msisdn. This API will enable Government or Enterprise to know if NIK and MSISDN are paired according to Telkomsel Registration Process. Telkomsel will just respond with Score."
+        },
+        {
+          "info": {
+            "name": "ID Verification V2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/v2/idverification",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "API to GET score location customer."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

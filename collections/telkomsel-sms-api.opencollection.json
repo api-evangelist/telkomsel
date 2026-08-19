@@ -1,0 +1,123 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telkomsel DigiHub APIs Consent Management SMS API",
+    "version": "2026-07-11"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SMS",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send SMS",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/v1/reguler/sendsms",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This service will send SMS to Telkomsel MSISDN."
+        },
+        {
+          "info": {
+            "name": "Send SMS Premium",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/sms/premium",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This service will send SMS to Telkomsel MSISDN."
+        },
+        {
+          "info": {
+            "name": "Get Delivery Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.digitalcore.telkomsel.com/v1/delivery",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "transaction_id",
+                "value": "",
+                "type": "query",
+                "description": "Transaction ID"
+              },
+              {
+                "name": "message_id",
+                "value": "",
+                "type": "query",
+                "description": "Message ID"
+              }
+            ]
+          },
+          "docs": "This service as a module to get delivery status which are initiated by developer / partner."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

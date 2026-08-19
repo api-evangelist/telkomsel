@@ -1,0 +1,200 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telkomsel DigiHub APIs Consent Management Subscriber Check API",
+    "version": "2026-07-11"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Subscriber Check",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "API Active Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/activestatus",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "[api_key]"
+              },
+              {
+                "name": "x-signature",
+                "value": "[x-signature]"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API will provide insight regarding active status of particular customer."
+        },
+        {
+          "info": {
+            "name": "API Active Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/v2/activestatus",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "[api_key]"
+              },
+              {
+                "name": "x-signature",
+                "value": "[x-signature]"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API will provide insight regarding active status of particular customer."
+        },
+        {
+          "info": {
+            "name": "This API will provide insight regarding subscriber’s subscription type of targeted customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/subscribertype",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API will provide insight regarding subscriber’s subscription type of targeted customer"
+        },
+        {
+          "info": {
+            "name": "This API will provide insight regarding roaming status of targeted customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/roamingstatus",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API will provide insight regarding roaming status of targeted customer"
+        },
+        {
+          "info": {
+            "name": "This API will provide insight regarding call forwarding status of targeted customer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/callforward",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API will provide insight regarding call forwarding status of targeted customer"
+        },
+        {
+          "info": {
+            "name": "Recycle v2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/recyclev2",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "[api_key]"
+              },
+              {
+                "name": "x-signature",
+                "value": "[x-signature]"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API will allow user to know if a MSISDN has been recycled or not by comparing a user’s last activation/registered time with last deactivation time in Telkomsel’s system."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,200 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telkomsel DigiHub APIs Consent Management Scoring and Insights API",
+    "version": "2026-07-11"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Scoring and Insights",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "API tScore Premium",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/v1/tscore/premium",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "[api_key]"
+              },
+              {
+                "name": "x-signature",
+                "value": "[x-signature]"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API tScore Premium can leverage telco’s dynamic subscriber profiling of a Mobile Station International Subscriber Directory Number (MSISDN) based on user’s behavioural activities, mobility patterns and link analysis of social network with other subscribers to formulate a financial rating for the user which then can be used by Financial Institutions to formulate generic telco score all Tekomsel’s MSISDN subscribers based on their telco data"
+        },
+        {
+          "info": {
+            "name": "API Generic Telco Score",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/v1/generic/telco/score",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "[api_key]"
+              },
+              {
+                "name": "x-signature",
+                "value": "[x-signature]"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This API Generic Telco Score can leverage telco’s dynamic subscriber profiling of a Mobile Station International Subscriber Directory Number (MSISDN) based on user’s behavioural activities, mobility patterns and link analysis of social network with other subscribers to formulate a financial rating for the user which then can be used by Financial Institutions to formulate generic telco score all Tekomsel’s MSISDN subscribers based on their telco data"
+        },
+        {
+          "info": {
+            "name": "SES v2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/sesv2",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "[api_key]"
+              },
+              {
+                "name": "x-signature",
+                "value": "[x-signature]"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "SES v2"
+        },
+        {
+          "info": {
+            "name": "Interest v2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/interestv2",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Interest v2"
+        },
+        {
+          "info": {
+            "name": "Lifestyle Score",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/lifestyle-score",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lifestyle Score"
+        },
+        {
+          "info": {
+            "name": "Customer Loyalty",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/loyalist",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "e688u2hgpkzjd244wecywwv8"
+              },
+              {
+                "name": "x-signature",
+                "value": "ff080f3200a5945deeb59ad65e2b33788f5df49066a82afcf8b6d5bf43ff76ea"
+              },
+              {
+                "name": "Content-Type",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Customer Loyalty"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

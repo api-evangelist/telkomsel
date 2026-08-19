@@ -1,0 +1,152 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Telkomsel DigiHub APIs Consent Management SIM Swap API",
+    "version": "2026-07-11"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "api_key",
+      "value": "{{api_key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SIM Swap",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "add data sms",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/digihub/subscheck/simswapv2",
+            "headers": [
+              {
+                "name": "api_key",
+                "value": "[api_key]"
+              },
+              {
+                "name": "x-signature",
+                "value": "[x-signature]"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "By passing in the appropriate options, you can search for\navailable\n"
+        },
+        {
+          "info": {
+            "name": "SIM Swap",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/check",
+            "headers": [
+              {
+                "name": "X-Authorization",
+                "value": "[X-token]"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Check if SIM swap has been performed during a past period"
+        },
+        {
+          "info": {
+            "name": "Authorize endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/bc-authorize",
+            "headers": [
+              {
+                "name": "X-Client-Id",
+                "value": "[api-key]"
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": "secret"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "login_hint",
+                  "value": ""
+                },
+                {
+                  "name": "scope",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Authorize a user"
+        },
+        {
+          "info": {
+            "name": "Get token endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.digitalcore.telkomsel.com/token",
+            "headers": [
+              {
+                "name": "X-Client-Id",
+                "value": "[api-key]"
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": "secret"
+              }
+            ],
+            "body": {
+              "type": "form-urlencoded",
+              "data": [
+                {
+                  "name": "grant_type",
+                  "value": ""
+                },
+                {
+                  "name": "auth_req_id",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get token a user"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
