@@ -13,6 +13,18 @@ description: Telkomsel (PT Telekomunikasi Selular) is Indonesia's largest mobile
   carriers, and partners with Vonage to distribute its network APIs globally.
   Access requires a DigiHub account; plans range from free sandbox trials and
   prepaid quota packages to enterprise tier and pay-as-you-use contracts.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
