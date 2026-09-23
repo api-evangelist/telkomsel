@@ -1,28 +1,34 @@
 {
   "provider": "telkomsel",
   "sources": [
-    "telkomsel-consent-management-api-openapi.yml",
-    "telkomsel-identity-verification-api-openapi.yml",
-    "telkomsel-location-api-openapi.yml",
-    "telkomsel-scoring-and-insights-api-openapi.yml",
-    "telkomsel-sim-swap-api-openapi.yml",
-    "telkomsel-sms-api-openapi.yml",
-    "telkomsel-subscriber-check-api-openapi.yml",
-    "telkomsel-ussd-api-openapi.yml"
+    "_original/telkomsel-openapi.yml"
   ],
   "outputs": [
     "telkomsel-consent-management-api-openapi.yml",
     "telkomsel-identity-verification-api-openapi.yml",
     "telkomsel-location-api-openapi.yml",
-    "telkomsel-scoring-and-insights-api-openapi.yml",
     "telkomsel-sim-swap-api-openapi.yml",
     "telkomsel-sms-api-openapi.yml",
+    "telkomsel-scoring-and-insights-api-openapi.yml",
     "telkomsel-subscriber-check-api-openapi.yml",
     "telkomsel-ussd-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "telkomsel-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "telkomsel-consent-management-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telkomsel-identity-verification-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telkomsel-location-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telkomsel-scoring-and-insights-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telkomsel-sim-swap-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telkomsel-sms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telkomsel-subscriber-check-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "telkomsel-ussd-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Telkomsel DigiHub APIs Consent Management Subscriber Check API
-  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace. Paths, methods, parameters, schemas, and examples are taken verbatim from DigiHub's own published per-endpoint OpenAPI documents (served publicly at https://digihub.telkomsel.com/apis/V2/endpoint/{id}); $refs were inlined and the per-endpoint documents merged into one file. Most APIs authenticate with an api_key header plus an x-signature header of SHA256(API Key + Secret Key + epoch timestamp); the CAMARA-style SIM Swap API uses OIDC CIBA (/bc-authorize + /token) with a bearer token. Calling any of these endpoints requires a DigiHub account and a subscribed plan (sandbox, quota, tier, or PAYU); enterprise plans require an NDA or commercial contract.
+  title: Telkomsel DigiHub Subscriber Check API
+  description: Consolidated OpenAPI for the API products Telkomsel exposes to developers and enterprises through DigiHub (https://digihub.telkomsel.com), Telkomsel's API marketplace.
   version: '2026-07-11'
   contact:
     url: https://digihub.telkomsel.com/showcase/contactus
@@ -307,7 +307,7 @@ paths:
     servers:
     - url: https://digihub.telkomsel.com
     post:
-      summary: This API will provide insight regarding subscriber’s subscription type of targeted customer
+      summary: This API will provide insight regarding subscriber’s subscription type of…
       operationId: subscriberType
       parameters:
       - in: header
@@ -603,7 +603,7 @@ paths:
     servers:
     - url: https://digihub.telkomsel.com
     post:
-      summary: This API will provide insight regarding call forwarding status of targeted customer
+      summary: This API will provide insight regarding call forwarding status of targeted…
       operationId: callForwarding
       parameters:
       - in: header
